@@ -2,6 +2,31 @@ import XCTest
 @testable import Commandable
 
 class CommandTests: XCTestCase {
+    func test_generateUsage_minimal() {
+        struct TestCommand: Command {
+            func run() throws {}
+        }
+
+        XCTAssertEqual(TestCommand().generateUsage(prefix: "tool command"), """
+            tool command
+            """)
+    }
+
+    func test_generateUsage_parameters() {
+        struct TestCommand: Command {
+            let input = Argument<String>(name: "files")
+            let output = Argument<String>()
+            let times = Argument<Int>()
+            let extra = Option<Int>(defaultValue: 1)
+            let verbose = Option<Bool>(defaultValue: false)
+            func run() throws {}
+        }
+
+        XCTAssertEqual(TestCommand().generateUsage(prefix: "tool command"), """
+            tool command [options] <files> <output> <times>
+            """)
+    }
+
     func test_generateHelp_minimal() {
         struct TestCommand: Command {
             func run() throws {}
@@ -67,8 +92,8 @@ class CommandTests: XCTestCase {
             let input = Argument<String>(name: "files", documentation: "This is the input documentation")
             let output = Argument<String>(documentation: "This is the output documentation")
             let times = Argument<Int>()
-            let extra = Option<Int>()
-            let verbose = Option<Bool>(defaultValue: false)
+            let extra = Option<Int>(defaultValue: 1)
+            let verbose = Option<Bool>(shorthand: "v", defaultValue: false)
             func run() throws {}
         }
 
@@ -78,12 +103,12 @@ class CommandTests: XCTestCase {
             USAGE: tool [options] <files> <output> <times>
 
             ARGUMENTS:
-              files        This is the input documentation
-              output       This is the output documentation
+              files            This is the input documentation
+              output           This is the output documentation
 
             OPTIONS:
-              --extra      \n\
-              --verbose    [default: false]
+              --extra          [default: 1]
+              --verbose, -v    [default: false]
             """)
     }
 
@@ -93,8 +118,8 @@ class CommandTests: XCTestCase {
             let input = Argument<String>(name: "files", documentation: "This is the input documentation")
             let output = Argument<String>(documentation: "This is the output documentation")
             let times = Argument<Int>()
-            let extra = Option<Int>(documentation: "This is the extra documentation")
-            let verbose = Option<Bool>(defaultValue: false, documentation: "This is the verbose documentation")
+            let extra = Option<Int>(defaultValue: 2, documentation: "This is the extra documentation")
+            let verbose = Option<Bool>(shorthand: "v", defaultValue: false, documentation: "This is the verbose documentation")
             func run() throws {}
         }
 
@@ -104,16 +129,18 @@ class CommandTests: XCTestCase {
             USAGE: tool [options] <files> <output> <times>
 
             ARGUMENTS:
-              files        This is the input documentation
-              output       This is the output documentation
+              files            This is the input documentation
+              output           This is the output documentation
 
             OPTIONS:
-              --extra      This is the extra documentation
-              --verbose    This is the verbose documentation [default: false]
+              --extra          This is the extra documentation [default: 2]
+              --verbose, -v    This is the verbose documentation [default: false]
             """)
     }
 
     static var allTests = [
+        ("test_generateUsage_minimal", test_generateUsage_minimal),
+        ("test_generateUsage_parameters", test_generateUsage_parameters),
         ("test_generateHelp_minimal", test_generateHelp_minimal),
         ("test_generateHelp_withDocumentation", test_generateHelp_withDocumentation),
         ("test_generateHelp_argumentsWithoutDocumentation", test_generateHelp_argumentsWithoutDocumentation),
