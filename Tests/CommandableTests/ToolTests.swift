@@ -1,7 +1,7 @@
 import XCTest
 @testable import Commandable
 
-class CommandableTests: XCTestCase {
+class ToolTests: XCTestCase {
     func testInitializer() {
         struct Main: Command {
             static let documentation = ""

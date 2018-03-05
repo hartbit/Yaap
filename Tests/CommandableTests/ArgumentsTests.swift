@@ -30,22 +30,22 @@ class ArgumentsTests: XCTestCase {
 
     func testArgumentHelp() {
         let argument1 = Argument<Int>(name: nil, documentation: nil)
-        XCTAssertNil(argument1.help(withLabel: "label"))
+        XCTAssertEqual(argument1.help(withLabel: "label"), [])
 
         let argument2 = Argument<Int>(name: "custom-name", documentation: nil)
-        XCTAssertNil(argument2.help(withLabel: "label"))
+        XCTAssertEqual(argument2.help(withLabel: "label"), [])
 
         let argument3 = Argument<Int>(name: nil, documentation: "Lengthy documentation")
-        XCTAssertEqual(argument3.help(withLabel: "label"), ArgumentHelp(
+        XCTAssertEqual(argument3.help(withLabel: "label"), [ArgumentHelp(
             category: "ARGUMENTS",
             label: "label",
-            description: "Lengthy documentation"))
+            description: "Lengthy documentation")])
 
         let argument4 = Argument<Int>(name: "custom-name", documentation: "Lengthy documentation")
-        XCTAssertEqual(argument4.help(withLabel: "label"), ArgumentHelp(
+        XCTAssertEqual(argument4.help(withLabel: "label"), [ArgumentHelp(
             category: "ARGUMENTS",
             label: "custom-name",
-            description: "Lengthy documentation"))
+            description: "Lengthy documentation")])
     }
 
     func testOptionInitializer() {
@@ -84,39 +84,69 @@ class ArgumentsTests: XCTestCase {
 
     func testOptionHelp() {
         let option1 = Option<Int>(name: nil, shorthand: nil, defaultValue: 42, documentation: nil)
-        XCTAssertEqual(option1.help(withLabel: "label"), ArgumentHelp(
+        XCTAssertEqual(option1.help(withLabel: "label"), [ArgumentHelp(
             category: "OPTIONS",
             label: "--label",
-            description: "[default: 42]"))
+            description: "[default: 42]")])
 
         let option2 = Option<Int>(name: "option", shorthand: nil, defaultValue: 0, documentation: nil)
-        XCTAssertEqual(option2.help(withLabel: "label"), ArgumentHelp(
+        XCTAssertEqual(option2.help(withLabel: "label"), [ArgumentHelp(
             category: "OPTIONS",
             label: "--option",
-            description: "[default: 0]"))
+            description: "[default: 0]")])
 
         let option3 = Option<String>(name: "output", shorthand: "o", defaultValue: "./", documentation: nil)
-        XCTAssertEqual(option3.help(withLabel: "label"), ArgumentHelp(
+        XCTAssertEqual(option3.help(withLabel: "label"), [ArgumentHelp(
             category: "OPTIONS",
             label: "--output, -o",
-            description: "[default: ./]"))
+            description: "[default: ./]")])
 
         let option4 = Option<Bool>(
             name: "verbose",
             shorthand: nil,
             defaultValue: true,
             documentation: "Awesome documentation")
-        XCTAssertEqual(option4.help(withLabel: "label"), ArgumentHelp(
+        XCTAssertEqual(option4.help(withLabel: "label"), [ArgumentHelp(
             category: "OPTIONS",
             label: "--verbose",
-            description: "Awesome documentation [default: true]"))
+            description: "Awesome documentation [default: true]")])
+    }
+
+    func testSubCommandPriority() {
+        let subCommand = SubCommand(commands: [:])
+        XCTAssertEqual(subCommand.priority, 0.25)
+    }
+
+    func testSubCommandUsage() {
+        let subCommand = SubCommand(commands: [:])
+        XCTAssertEqual(subCommand.usage(withLabel: "label"), "label")
+    }
+
+    func testSubCommandHelp() {
+        let subCommand = SubCommand(commands: [
+            "edit": DocumentationCommand(documentation: "The documentation for edit"),
+            "unedit": DocumentationCommand(documentation: "The documentation for unedit"),
+            "random": DocumentationCommand(documentation: "")
+        ])
+
+        XCTAssertEqual(subCommand.help(withLabel: "label"), [
+            ArgumentHelp(category: "SUBCOMMANDS", label: "edit", description: "The documentation for edit"),
+            ArgumentHelp(category: "SUBCOMMANDS", label: "random", description: ""),
+            ArgumentHelp(category: "SUBCOMMANDS", label: "unedit", description: "The documentation for unedit"),
+        ])
     }
 
     static var allTests = [
         ("testArgumentInitializer", testArgumentInitializer),
+        ("testArgumentPriority", testArgumentPriority),
+        ("testArgumentUsage", testArgumentUsage),
         ("testArgumentHelp", testArgumentHelp),
         ("testOptionInitializer", testOptionInitializer),
+        ("testOptionPriority", testOptionPriority),
+        ("testOptionUsage", testOptionUsage),
         ("testOptionHelp", testOptionHelp),
+        ("testSubCommandPriority", testSubCommandPriority),
+        ("testSubCommandUsage", testSubCommandUsage),
+        ("testSubCommandHelp", testSubCommandHelp),
     ]
 }
-

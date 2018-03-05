@@ -12,4 +12,3 @@ extension Collection where Element: Comparable {
         return newArray
     }
 }
-

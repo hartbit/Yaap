@@ -7,7 +7,7 @@ public struct ArgumentHelp {
 public protocol ArgumentProtocol: class {
     var priority: Double { get }
     func usage(withLabel label: String) -> String?
-    func help(withLabel label: String) -> ArgumentHelp?
+    func help(withLabel label: String) -> [ArgumentHelp]
 }
 
 public class Argument<T: LosslessStringConvertible>: ArgumentProtocol {
@@ -25,14 +25,14 @@ public class Argument<T: LosslessStringConvertible>: ArgumentProtocol {
         self.documentation = documentation
     }
 
-    public func help(withLabel label: String) -> ArgumentHelp? {
+    public func help(withLabel label: String) -> [ArgumentHelp] {
         if let documentation = documentation {
-            return ArgumentHelp(
+            return [ArgumentHelp(
                 category: "ARGUMENTS",
                 label: name ?? label,
-                description: documentation)
+                description: documentation)]
         } else {
-            return nil
+            return []
         }
     }
 }
@@ -49,7 +49,7 @@ public class Option<T: LosslessStringConvertible>: ArgumentProtocol {
         return "[options]"
     }
 
-    public func help(withLabel label: String) -> ArgumentHelp? {
+    public func help(withLabel label: String) -> [ArgumentHelp] {
         var label = "--\(name ?? label)"
 
         if let shorthand = shorthand {
@@ -64,10 +64,10 @@ public class Option<T: LosslessStringConvertible>: ArgumentProtocol {
 
         components.append("[default: \(defaultValue.description)]")
 
-        return ArgumentHelp(
+        return [ArgumentHelp(
             category: "OPTIONS",
             label: label,
-            description: components.joined(separator: " "))
+            description: components.joined(separator: " "))]
     }
 
     public init(name: String? = nil, shorthand: Character? = nil, defaultValue: T, documentation: String? = nil) {
@@ -78,3 +78,29 @@ public class Option<T: LosslessStringConvertible>: ArgumentProtocol {
         self.value = defaultValue
     }
 }
+
+public class SubCommand: ArgumentProtocol {
+    public let priority: Double = 0.25
+    public let commands: [String: Command]
+    public private(set) var value: Command!
+
+    public func usage(withLabel label: String) -> String? {
+        return label
+    }
+
+    public func help(withLabel label: String) -> [ArgumentHelp] {
+        return commands
+            .sorted(by: { $0.key < $1.key })
+            .map({ (label, command) in
+                ArgumentHelp(
+                    category: "SUBCOMMANDS",
+                    label: label,
+                    description: command.documentation)
+            })
+    }
+
+    public init(commands: [String: Command]) {
+        self.commands = commands
+    }
+}
+

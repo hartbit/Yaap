@@ -14,8 +14,8 @@ class CommandTests: XCTestCase {
 
     func test_generateUsage_parameters() {
         struct TestCommand: Command {
-            let input = Argument<String>(name: "files")
             let output = Argument<String>()
+            let input = Argument<String>(name: "files")
             let times = Argument<Int>()
             let extra = Option<Int>(defaultValue: 1)
             let verbose = Option<Bool>(defaultValue: false)
@@ -23,7 +23,7 @@ class CommandTests: XCTestCase {
         }
 
         XCTAssertEqual(TestCommand().generateUsage(prefix: "tool command"), """
-            tool command [options] <files> <output> <times>
+            tool command [options] <output> <files> <times>
             """)
     }
 
@@ -53,8 +53,8 @@ class CommandTests: XCTestCase {
     func test_generateHelp_argumentsWithoutDocumentation() {
         struct TestCommand: Command {
             let documentation = "This is great documentation"
-            let input = Argument<String>(name: "files")
             let output = Argument<String>()
+            let input = Argument<String>(name: "files")
             let times = Argument<Int>()
             func run() {}
         }
@@ -62,15 +62,15 @@ class CommandTests: XCTestCase {
         XCTAssertEqual(TestCommand().generateHelp(usagePrefix: "tool command"), """
             OVERVIEW: This is great documentation
 
-            USAGE: tool command <files> <output> <times>
+            USAGE: tool command <output> <files> <times>
             """)
     }
 
     func test_generateHelp_argumentsWithDocumentation() {
         struct TestCommand: Command {
             let documentation = "This is great documentation"
-            let input = Argument<String>(name: "files", documentation: "This is the input documentation")
             let output = Argument<String>(documentation: "This is the output documentation")
+            let input = Argument<String>(name: "files", documentation: "This is the input documentation")
             let times = Argument<Int>()
             func run() {}
         }
@@ -78,7 +78,7 @@ class CommandTests: XCTestCase {
         XCTAssertEqual(TestCommand().generateHelp(usagePrefix: "tool command"), """
             OVERVIEW: This is great documentation
 
-            USAGE: tool command <files> <output> <times>
+            USAGE: tool command <output> <files> <times>
 
             ARGUMENTS:
               files     This is the input documentation
@@ -89,8 +89,8 @@ class CommandTests: XCTestCase {
     func test_generateHelp_optionsWithoutDocumentation() {
         struct TestCommand: Command {
             let documentation = "This is great documentation"
-            let input = Argument<String>(name: "files", documentation: "This is the input documentation")
             let output = Argument<String>(documentation: "This is the output documentation")
+            let input = Argument<String>(name: "files", documentation: "This is the input documentation")
             let times = Argument<Int>()
             let extra = Option<Int>(defaultValue: 1)
             let verbose = Option<Bool>(shorthand: "v", defaultValue: false)
@@ -100,7 +100,7 @@ class CommandTests: XCTestCase {
         XCTAssertEqual(TestCommand().generateHelp(usagePrefix: "tool"), """
             OVERVIEW: This is great documentation
 
-            USAGE: tool [options] <files> <output> <times>
+            USAGE: tool [options] <output> <files> <times>
 
             ARGUMENTS:
               files            This is the input documentation
@@ -118,8 +118,8 @@ class CommandTests: XCTestCase {
             let input = Argument<String>(name: "files", documentation: "This is the input documentation")
             let output = Argument<String>(documentation: "This is the output documentation")
             let times = Argument<Int>()
-            let extra = Option<Int>(defaultValue: 2, documentation: "This is the extra documentation")
             let verbose = Option<Bool>(shorthand: "v", defaultValue: false, documentation: "This is the verbose documentation")
+            let extra = Option<Int>(defaultValue: 2, documentation: "This is the extra documentation")
             func run() throws {}
         }
 
@@ -138,6 +138,37 @@ class CommandTests: XCTestCase {
             """)
     }
 
+    func test_generateUsage_subCommand() {
+        let command = GroupCommand(commands: [
+            "edit": DocumentationCommand(documentation: "The documentation for edit"),
+            "unedit": DocumentationCommand(documentation: "The documentation for unedit"),
+            "random": DocumentationCommand(documentation: "")
+        ])
+
+        XCTAssertEqual(command.generateUsage(prefix: "tool command"), """
+            tool command subcommand
+            """)
+    }
+
+    func test_generateHelp_subCommand() {
+        let command = GroupCommand(commands: [
+            "edit": DocumentationCommand(documentation: "The documentation for edit"),
+            "unedit": DocumentationCommand(documentation: "The documentation for unedit"),
+            "random": DocumentationCommand(documentation: "")
+        ], documentation: "This is the group command documentation")
+
+        XCTAssertEqual(command.generateHelp(usagePrefix: "tool"), """
+            OVERVIEW: This is the group command documentation
+
+            USAGE: tool subcommand
+
+            SUBCOMMANDS:
+              edit      The documentation for edit
+              random    
+              unedit    The documentation for unedit
+            """)
+    }
+
     static var allTests = [
         ("test_generateUsage_minimal", test_generateUsage_minimal),
         ("test_generateUsage_parameters", test_generateUsage_parameters),
@@ -147,5 +178,7 @@ class CommandTests: XCTestCase {
         ("test_generateHelp_argumentsWithDocumentation", test_generateHelp_argumentsWithDocumentation),
         ("test_generateHelp_optionsWithoutDocumentation", test_generateHelp_optionsWithoutDocumentation),
         ("test_generateHelp_optionsWithDocumentation", test_generateHelp_optionsWithDocumentation),
+        ("test_generateUsage_subCommand", test_generateUsage_subCommand),
+        ("test_generateHelp_subCommand", test_generateHelp_subCommand),
     ]
 }
