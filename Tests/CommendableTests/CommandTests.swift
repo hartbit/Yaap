@@ -1,25 +1,24 @@
 import XCTest
-@testable import Commandable
+@testable import Commendable
 
 class CommandTests: XCTestCase {
     func test_generateUsage_minimal() {
-        struct TestCommand: Command {
-            func run() throws {}
-        }
-
-        XCTAssertEqual(TestCommand().generateUsage(prefix: "tool command"), """
+        XCTAssertEqual(Command(documentation: "").generateUsage(prefix: "tool command"), """
             tool command
             """)
     }
 
     func test_generateUsage_parameters() {
-        struct TestCommand: Command {
+        class TestCommand: Command {
             let output = Argument<String>()
             let input = Argument<String>(name: "files")
             let times = Argument<Int>()
             let extra = Option<Int>(defaultValue: 1)
             let verbose = Option<Bool>(defaultValue: false)
-            func run() throws {}
+
+            init() {
+                super.init(documentation: "")
+            }
         }
 
         XCTAssertEqual(TestCommand().generateUsage(prefix: "tool command"), """
@@ -28,22 +27,14 @@ class CommandTests: XCTestCase {
     }
 
     func test_generateHelp_minimal() {
-        struct TestCommand: Command {
-            func run() throws {}
-        }
-
-        XCTAssertEqual(TestCommand().generateHelp(usagePrefix: "tool command"), """
+        XCTAssertEqual(Command(documentation: "").generateHelp(usagePrefix: "tool command"), """
             USAGE: tool command
             """)
     }
 
     func test_generateHelp_withDocumentation() {
-        struct TestCommand: Command {
-            let documentation = "This is great documentation"
-            func run() throws {}
-        }
-
-        XCTAssertEqual(TestCommand().generateHelp(usagePrefix: "tool command"), """
+        let command = Command(documentation: "This is great documentation")
+        XCTAssertEqual(command.generateHelp(usagePrefix: "tool command"), """
             OVERVIEW: This is great documentation
 
             USAGE: tool command
@@ -51,12 +42,14 @@ class CommandTests: XCTestCase {
     }
 
     func test_generateHelp_argumentsWithoutDocumentation() {
-        struct TestCommand: Command {
-            let documentation = "This is great documentation"
+        class TestCommand: Command {
             let output = Argument<String>()
             let input = Argument<String>(name: "files")
             let times = Argument<Int>()
-            func run() {}
+
+            init() {
+                super.init(documentation: "This is great documentation")
+            }
         }
 
         XCTAssertEqual(TestCommand().generateHelp(usagePrefix: "tool command"), """
@@ -67,12 +60,14 @@ class CommandTests: XCTestCase {
     }
 
     func test_generateHelp_argumentsWithDocumentation() {
-        struct TestCommand: Command {
-            let documentation = "This is great documentation"
+        class TestCommand: Command {
             let output = Argument<String>(documentation: "This is the output documentation")
             let input = Argument<String>(name: "files", documentation: "This is the input documentation")
             let times = Argument<Int>()
-            func run() {}
+
+            init() {
+                super.init(documentation: "This is great documentation")
+            }
         }
 
         XCTAssertEqual(TestCommand().generateHelp(usagePrefix: "tool command"), """
@@ -87,14 +82,16 @@ class CommandTests: XCTestCase {
     }
 
     func test_generateHelp_optionsWithoutDocumentation() {
-        struct TestCommand: Command {
-            let documentation = "This is great documentation"
+        class TestCommand: Command {
             let output = Argument<String>(documentation: "This is the output documentation")
             let input = Argument<String>(name: "files", documentation: "This is the input documentation")
             let times = Argument<Int>()
             let extra = Option<Int>(defaultValue: 1)
             let verbose = Option<Bool>(shorthand: "v", defaultValue: false)
-            func run() throws {}
+
+            init() {
+                super.init(documentation: "This is great documentation")
+            }
         }
 
         XCTAssertEqual(TestCommand().generateHelp(usagePrefix: "tool"), """
@@ -113,14 +110,16 @@ class CommandTests: XCTestCase {
     }
 
     func test_generateHelp_optionsWithDocumentation() {
-        struct TestCommand: Command {
-            let documentation = "This is great documentation"
+        class TestCommand: Command {
             let input = Argument<String>(name: "files", documentation: "This is the input documentation")
             let output = Argument<String>(documentation: "This is the output documentation")
             let times = Argument<Int>()
             let verbose = Option<Bool>(shorthand: "v", defaultValue: false, documentation: "This is the verbose documentation")
             let extra = Option<Int>(defaultValue: 2, documentation: "This is the extra documentation")
-            func run() throws {}
+
+            init() {
+                super.init(documentation: "This is great documentation")
+            }
         }
 
         XCTAssertEqual(TestCommand().generateHelp(usagePrefix: "tool"), """
@@ -140,9 +139,9 @@ class CommandTests: XCTestCase {
 
     func test_generateUsage_subCommand() {
         let command = GroupCommand(commands: [
-            "edit": DocumentationCommand(documentation: "The documentation for edit"),
-            "unedit": DocumentationCommand(documentation: "The documentation for unedit"),
-            "random": DocumentationCommand(documentation: "")
+            "edit": Command(documentation: "The documentation for edit"),
+            "unedit": Command(documentation: "The documentation for unedit"),
+            "random": Command(documentation: "")
         ])
 
         XCTAssertEqual(command.generateUsage(prefix: "tool command"), """
@@ -152,9 +151,9 @@ class CommandTests: XCTestCase {
 
     func test_generateHelp_subCommand() {
         let command = GroupCommand(commands: [
-            "edit": DocumentationCommand(documentation: "The documentation for edit"),
-            "unedit": DocumentationCommand(documentation: "The documentation for unedit"),
-            "random": DocumentationCommand(documentation: "")
+            "edit": Command(documentation: "The documentation for edit"),
+            "unedit": Command(documentation: "The documentation for unedit"),
+            "random": Command(documentation: "")
         ], documentation: "This is the group command documentation")
 
         XCTAssertEqual(command.generateHelp(usagePrefix: "tool"), """

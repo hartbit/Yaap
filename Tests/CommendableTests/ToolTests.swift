@@ -1,15 +1,9 @@
 import XCTest
-@testable import Commandable
+@testable import Commendable
 
 class ToolTests: XCTestCase {
     func testInitializer() {
-        struct Main: Command {
-            static let documentation = ""
-            func run() {}
-        }
-
-        let main = Main()
-        let tool = Tool(name: "Name", version: "1.0", command: main)
+        let tool = Tool(name: "Name", version: "1.0", command: Command(documentation: ""))
         XCTAssertEqual(tool.name, "Name")
         XCTAssertEqual(tool.version, "1.0")
     }

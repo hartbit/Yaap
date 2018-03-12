@@ -3,20 +3,18 @@
 import PackageDescription
 
 let package = Package(
-    name: "Commandable",
+    name: "Commendable",
     products: [
         .library(
-            name: "Commandable",
-            targets: ["Commandable"]),
-    ],
-    dependencies: [
+            name: "Commendable",
+            targets: ["Commendable"]),
     ],
     targets: [
         .target(
-            name: "Commandable",
+            name: "Commendable",
             dependencies: []),
         .testTarget(
-            name: "CommandableTests",
-            dependencies: ["Commandable"]),
+            name: "CommendableTests",
+            dependencies: ["Commendable"]),
     ]
 )

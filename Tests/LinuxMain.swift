@@ -1,6 +1,8 @@
 import XCTest
-@testable import CommandableTests
+@testable import CommendableTests
 
 XCTMain([
-    testCase(CommandableTests.allTests),
+    testCase(ArgumentsTests.allTests),
+    testCase(CommandsTests.allTests),
+    testCase(ToolTests.allTests),
 ])
