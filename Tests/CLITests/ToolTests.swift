@@ -1,5 +1,5 @@
 import XCTest
-@testable import Commendable
+@testable import CLI
 
 class ToolTests: XCTestCase {
     func testInitializer() {

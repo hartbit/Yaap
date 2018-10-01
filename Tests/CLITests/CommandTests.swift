@@ -1,5 +1,5 @@
 import XCTest
-@testable import Commendable
+@testable import CLI
 
 class CommandTests: XCTestCase {
     func test_generateUsage_minimal() {

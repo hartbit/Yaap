@@ -1,5 +1,5 @@
 import XCTest
-@testable import Commendable
+@testable import CLI
 
 class ExtensionsTests: XCTestCase {
     // Tests come the following blog: https://oldfashionedsoftware.com/tag/levenshtein-distance/

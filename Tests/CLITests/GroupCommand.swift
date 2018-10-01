@@ -1,5 +1,5 @@
 import XCTest
-@testable import Commendable
+@testable import CLI
 
 class GroupCommandTests: XCTestCase {
     func testGenerateUsage() {

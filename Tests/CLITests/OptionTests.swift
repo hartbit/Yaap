@@ -1,5 +1,5 @@
 import XCTest
-@testable import Commendable
+@testable import CLI
 
 class OptionTests: XCTestCase {
     func test_initializer() {

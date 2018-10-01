@@ -1,5 +1,5 @@
 import XCTest
-@testable import Commendable
+@testable import CLI
 
 class SubCommandTests: XCTestCase {
     func tes_priority() {

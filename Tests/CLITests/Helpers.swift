@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-import Commendable
+import CLI
 
 extension ArgumentHelp: Equatable {
     public static func == (lhs: ArgumentHelp, rhs: ArgumentHelp) -> Bool {
@@ -33,6 +33,10 @@ func XCTAssertThrowsError<T, E: Error & Equatable>(
     line: UInt = #line
 ) {
     XCTAssertThrowsError(expression, "should have thrown", file: file, line: line, { thrownError in
-        XCTAssert(thrownError as? E == expectedError, "\(thrownError) si not equal to \(expectedError)", file: file, line: line)
+        XCTAssert(
+            thrownError as? E == expectedError,
+            "\(thrownError) si not equal to \(expectedError)",
+            file: file,
+            line: line)
     })
 }
