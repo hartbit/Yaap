@@ -93,26 +93,23 @@ class OptionTests: XCTestCase {
         let option = Option<Int>(name: "option", shorthand: "o", defaultValue: 42, documentation: nil)
         option.setup(withLabel: "label")
         var leftover: [String] = []
-        XCTAssertThrowsError(try option.parse(arguments: ["before", "--option"], leftover: &leftover), equals: OptionMissingArgumentError(option: "--option"))
-        XCTAssertThrowsError(try option.parse(arguments: ["-o"], leftover: &leftover), equals: OptionMissingArgumentError(option: "-o"))
+        XCTAssertThrowsError(
+            try option.parse(arguments: ["before", "--option"], leftover: &leftover),
+            equals: OptionMissingArgumentError(option: "--option"))
+        XCTAssertThrowsError(
+            try option.parse(arguments: ["-o"], leftover: &leftover),
+            equals: OptionMissingArgumentError(option: "-o"))
     }
 
     func test_parse_invalidValue() throws {
         let option = Option<Int>(name: "option", shorthand: "o", defaultValue: 42, documentation: nil)
         option.setup(withLabel: "label")
         var leftover: [String] = []
-        XCTAssertThrowsError(try option.parse(arguments: ["before", "--option", "two"], leftover: &leftover), equals: OptionInvalidFormatError(option: "--option", value: "two"))
-        XCTAssertThrowsError(try option.parse(arguments: ["-o", "2.4"], leftover: &leftover), equals: OptionInvalidFormatError(option: "-o", value: "2.4"))
+        XCTAssertThrowsError(
+            try option.parse(arguments: ["before", "--option", "two"], leftover: &leftover),
+            equals: OptionInvalidFormatError(option: "--option", value: "two"))
+        XCTAssertThrowsError(
+            try option.parse(arguments: ["-o", "2.4"], leftover: &leftover),
+            equals: OptionInvalidFormatError(option: "-o", value: "2.4"))
     }
-
-    static var allTests = [
-        ("test_initializer", test_initializer),
-        ("test_priority", test_priority),
-        ("test_usage", test_usage),
-        ("test_help", test_help),
-        ("test_parse_noArguments", test_parse_noArguments),
-        ("test_parse_noStart", test_parse_noStart),
-        ("test_parse_noValue", test_parse_noValue),
-        ("test_parse_invalidValue", test_parse_invalidValue),
-    ]
 }

@@ -32,9 +32,4 @@ class GroupCommandTests: XCTestCase {
               unedit    The documentation for unedit
             """)
     }
-
-    static var allTests = [
-        ("testGenerateUsage", testGenerateUsage),
-        ("testGenerateHelp", testGenerateHelp),
-    ]
 }

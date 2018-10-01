@@ -1,8 +1,8 @@
 import XCTest
-@testable import CommendableTests
 
-XCTMain([
-    testCase(ArgumentsTests.allTests),
-    testCase(CommandsTests.allTests),
-    testCase(ToolTests.allTests),
-])
+import CommendableTests
+
+var tests = [XCTestCaseEntry]()
+tests += CommendableTests.__allTests()
+
+XCTMain(tests)

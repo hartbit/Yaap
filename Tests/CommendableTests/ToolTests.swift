@@ -7,8 +7,4 @@ class ToolTests: XCTestCase {
         XCTAssertEqual(tool.name, "Name")
         XCTAssertEqual(tool.version, "1.0")
     }
-
-    static var allTests = [
-        ("testInitializer", testInitializer),
-    ]
 }

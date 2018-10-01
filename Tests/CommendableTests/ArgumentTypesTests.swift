@@ -20,8 +20,12 @@ class ArgumentTypesTests: XCTestCase {
 
     func test_bool_invalidValue() {
         var leftover: [String] = []
-        XCTAssertThrowsError(try Bool(arguments: ["0"], leftover: &leftover), equals: ParseError.invalidFormat("0"))
-        XCTAssertThrowsError(try Bool(arguments: ["hello"], leftover: &leftover), equals: ParseError.invalidFormat("hello"))
+        XCTAssertThrowsError(
+            try Bool(arguments: ["0"], leftover: &leftover),
+            equals: ParseError.invalidFormat("0"))
+        XCTAssertThrowsError(
+            try Bool(arguments: ["hello"], leftover: &leftover),
+            equals: ParseError.invalidFormat("hello"))
     }
 
     func test_bool_validValue() {
@@ -48,16 +52,36 @@ class ArgumentTypesTests: XCTestCase {
 
     func test_integers_invalidValue() {
         var leftover: [String] = []
-        XCTAssertThrowsError(try Int(arguments: ["two"], leftover: &leftover), equals: ParseError.invalidFormat("two"))
-        XCTAssertThrowsError(try Int8(arguments: ["-129"], leftover: &leftover), equals: ParseError.invalidFormat("-129"))
-        XCTAssertThrowsError(try Int16(arguments: ["4834984935"], leftover: &leftover), equals: ParseError.invalidFormat("4834984935"))
-        XCTAssertThrowsError(try Int32(arguments: ["really"], leftover: &leftover), equals: ParseError.invalidFormat("really"))
-        XCTAssertThrowsError(try Int64(arguments: ["2.6"], leftover: &leftover), equals: ParseError.invalidFormat("2.6"))
-        XCTAssertThrowsError(try UInt(arguments: ["three"], leftover: &leftover), equals: ParseError.invalidFormat("three"))
-        XCTAssertThrowsError(try UInt8(arguments: ["-2"], leftover: &leftover), equals: ParseError.invalidFormat("-2"))
-        XCTAssertThrowsError(try UInt16(arguments: ["10e45"], leftover: &leftover), equals: ParseError.invalidFormat("10e45"))
-        XCTAssertThrowsError(try UInt32(arguments: ["totally"], leftover: &leftover), equals: ParseError.invalidFormat("totally"))
-        XCTAssertThrowsError(try UInt64(arguments: ["big"], leftover: &leftover), equals: ParseError.invalidFormat("big"))
+        XCTAssertThrowsError(
+            try Int(arguments: ["two"], leftover: &leftover),
+            equals: ParseError.invalidFormat("two"))
+        XCTAssertThrowsError(
+            try Int8(arguments: ["-129"], leftover: &leftover),
+            equals: ParseError.invalidFormat("-129"))
+        XCTAssertThrowsError(
+            try Int16(arguments: ["4834984935"], leftover: &leftover),
+            equals: ParseError.invalidFormat("4834984935"))
+        XCTAssertThrowsError(
+            try Int32(arguments: ["really"], leftover: &leftover),
+            equals: ParseError.invalidFormat("really"))
+        XCTAssertThrowsError(
+            try Int64(arguments: ["2.6"], leftover: &leftover),
+            equals: ParseError.invalidFormat("2.6"))
+        XCTAssertThrowsError(
+            try UInt(arguments: ["three"], leftover: &leftover),
+            equals: ParseError.invalidFormat("three"))
+        XCTAssertThrowsError(
+            try UInt8(arguments: ["-2"], leftover: &leftover),
+            equals: ParseError.invalidFormat("-2"))
+        XCTAssertThrowsError(
+            try UInt16(arguments: ["10e45"], leftover: &leftover),
+            equals: ParseError.invalidFormat("10e45"))
+        XCTAssertThrowsError(
+            try UInt32(arguments: ["totally"], leftover: &leftover),
+            equals: ParseError.invalidFormat("totally"))
+        XCTAssertThrowsError(
+            try UInt64(arguments: ["big"], leftover: &leftover),
+            equals: ParseError.invalidFormat("big"))
     }
 
     func test_integers_validValue() {
@@ -92,8 +116,12 @@ class ArgumentTypesTests: XCTestCase {
 
     func test_floatingPoints_invalidValue() {
         var leftover: [String] = []
-        XCTAssertThrowsError(try Float(arguments: ["two"], leftover: &leftover), equals: ParseError.invalidFormat("two"))
-        XCTAssertThrowsError(try Double(arguments: ["74eff"], leftover: &leftover), equals: ParseError.invalidFormat("74eff"))
+        XCTAssertThrowsError(
+            try Float(arguments: ["two"], leftover: &leftover),
+            equals: ParseError.invalidFormat("two"))
+        XCTAssertThrowsError(
+            try Double(arguments: ["74eff"], leftover: &leftover),
+            equals: ParseError.invalidFormat("74eff"))
     }
 
     func test_floatingPoints_validValue() {
@@ -116,8 +144,12 @@ class ArgumentTypesTests: XCTestCase {
 
     func test_collections_invalidValue() {
         var leftover: [String] = []
-        XCTAssertThrowsError(try [Int](arguments: ["invalid"], leftover: &leftover), equals: ParseError.invalidFormat("invalid"))
-        XCTAssertThrowsError(try Set<Float>(arguments: ["5", "not"], leftover: &leftover), equals: ParseError.invalidFormat("not"))
+        XCTAssertThrowsError(
+            try [Int](arguments: ["invalid"], leftover: &leftover),
+            equals: ParseError.invalidFormat("invalid"))
+        XCTAssertThrowsError(
+            try Set<Float>(arguments: ["5", "not"], leftover: &leftover),
+            equals: ParseError.invalidFormat("not"))
     }
 
     func test_collections_validValue() {
@@ -127,21 +159,4 @@ class ArgumentTypesTests: XCTestCase {
         XCTAssertEqual(try Set<Int>(arguments: ["4", "-2", "8", "-2"], leftover: &leftover), Set([4, -2, 8]))
         XCTAssertEqual(leftover, [])
     }
-
-    static var allTests = [
-        ("test_string_noValue", test_string_noValue),
-        ("test_string_validValue", test_string_validValue),
-        ("test_bool_noValue", test_bool_noValue),
-        ("test_bool_invalidValue", test_bool_invalidValue),
-        ("test_bool_validValue", test_bool_validValue),
-        ("test_integers_noValue", test_integers_noValue),
-        ("test_integers_invalidValue", test_integers_invalidValue),
-        ("test_integers_validValue", test_integers_validValue),
-        ("test_floatingPoints_noValue", test_floatingPoints_noValue),
-        ("test_floatingPoints_invalidValue", test_floatingPoints_invalidValue),
-        ("test_floatingPoints_validValue", test_floatingPoints_validValue),
-        ("test_collections_noValue", test_collections_noValue),
-        ("test_collections_invalidValue", test_collections_invalidValue),
-        ("test_collections_validValue", test_collections_validValue),
-    ]
 }

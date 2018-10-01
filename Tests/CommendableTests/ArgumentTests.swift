@@ -59,11 +59,15 @@ class ArgumentTests: XCTestCase {
 
         let argument1 = Argument<Int>(name: nil, documentation: nil)
         argument1.setup(withLabel: "label")
-        XCTAssertThrowsError(try argument1.parse(arguments: [], leftover: &leftover), equals: MissingArgumentError(argument: "label"))
+        XCTAssertThrowsError(
+            try argument1.parse(arguments: [], leftover: &leftover),
+            equals: MissingArgumentError(argument: "label"))
 
         let argument2 = Argument<Int>(name: "argument-name", documentation: nil)
         argument2.setup(withLabel: "label")
-        XCTAssertThrowsError(try argument2.parse(arguments: [], leftover: &leftover), equals: MissingArgumentError(argument: "argument-name"))
+        XCTAssertThrowsError(
+            try argument2.parse(arguments: [], leftover: &leftover),
+            equals: MissingArgumentError(argument: "argument-name"))
     }
 
     func test_parse_invalidValue() {
@@ -71,11 +75,15 @@ class ArgumentTests: XCTestCase {
 
         let argument1 = Argument<Int>(name: nil, documentation: nil)
         argument1.setup(withLabel: "label")
-        XCTAssertThrowsError(try argument1.parse(arguments: ["2.5"], leftover: &leftover), equals: ArgumentInvalidFormatError(argument: "label", value: "2.5"))
+        XCTAssertThrowsError(
+            try argument1.parse(arguments: ["2.5"], leftover: &leftover),
+            equals: ArgumentInvalidFormatError(argument: "label", value: "2.5"))
 
         let argument2 = Argument<Int>(name: "agument-name", documentation: nil)
         argument2.setup(withLabel: "label")
-        XCTAssertThrowsError(try argument2.parse(arguments: ["two"], leftover: &leftover), equals: ArgumentInvalidFormatError(argument: "agument-name", value: "two"))
+        XCTAssertThrowsError(
+            try argument2.parse(arguments: ["two"], leftover: &leftover),
+            equals: ArgumentInvalidFormatError(argument: "agument-name", value: "two"))
     }
 
     func test_parse_validValue() throws {
@@ -86,14 +94,4 @@ class ArgumentTests: XCTestCase {
         XCTAssertEqual(argument.value, 5)
         XCTAssertEqual(leftover, ["2", "whatever"])
     }
-
-    static var allTests = [
-        ("test_initializer", test_initializer),
-        ("test_priority", test_priority),
-        ("test_usage", test_usage),
-        ("test_help", test_help),
-        ("test_parse_noArguments", test_parse_noArguments),
-        ("test_parse_invalidValue", test_parse_invalidValue),
-        ("test_parse_validValue", test_parse_validValue),
-    ]
 }

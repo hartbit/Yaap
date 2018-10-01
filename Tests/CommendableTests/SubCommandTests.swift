@@ -38,7 +38,9 @@ class SubCommandTests: XCTestCase {
         subCommand.setup(withLabel: "label")
 
         var leftover: [String] = []
-        XCTAssertThrowsError(try subCommand.parse(arguments: [], leftover: &leftover), equals: SubCommandMissingArgumentError())
+        XCTAssertThrowsError(
+            try subCommand.parse(arguments: [], leftover: &leftover),
+            equals: SubCommandMissingArgumentError())
     }
 
     func test_parse_invalidValue() {
@@ -51,10 +53,18 @@ class SubCommandTests: XCTestCase {
         subCommand.setup(withLabel: "label")
 
         var leftover: [String] = []
-        XCTAssertThrowsError(try subCommand.parse(arguments: ["incorrect"], leftover: &leftover), equals: InvalidSubCommandError(command: "incorrect", proposition: nil))
-        XCTAssertThrowsError(try subCommand.parse(arguments: ["edits"], leftover: &leftover), equals: InvalidSubCommandError(command: "edits", proposition: "edit"))
-        XCTAssertThrowsError(try subCommand.parse(arguments: ["uedit"], leftover: &leftover), equals: InvalidSubCommandError(command: "uedit", proposition: "edit"))
-        XCTAssertThrowsError(try subCommand.parse(arguments: ["unnedit"], leftover: &leftover), equals: InvalidSubCommandError(command: "unnedit", proposition: "unedit"))
+        XCTAssertThrowsError(
+            try subCommand.parse(arguments: ["incorrect"], leftover: &leftover),
+            equals: InvalidSubCommandError(command: "incorrect", proposition: nil))
+        XCTAssertThrowsError(
+            try subCommand.parse(arguments: ["edits"], leftover: &leftover),
+            equals: InvalidSubCommandError(command: "edits", proposition: "edit"))
+        XCTAssertThrowsError(
+            try subCommand.parse(arguments: ["undit"], leftover: &leftover),
+            equals: InvalidSubCommandError(command: "undit", proposition: "unedit"))
+        XCTAssertThrowsError(
+            try subCommand.parse(arguments: ["unnedit"], leftover: &leftover),
+            equals: InvalidSubCommandError(command: "unnedit", proposition: "unedit"))
     }
 
     func test_parse_validCommand() throws {
@@ -79,13 +89,4 @@ class SubCommandTests: XCTestCase {
         XCTAssert(subCommand.value === mockCommand)
         XCTAssertEqual(mockCommand.arguments, ["arg1", "arg2"])
     }
-
-    static var allTests = [
-        ("tes_priority", tes_priority),
-        ("test_usage", test_usage),
-        ("test_help", test_help),
-        ("test_parse_noArguments", test_parse_noArguments),
-        ("test_parse_invalidValue", test_parse_invalidValue),
-        ("test_parse_validCommand", test_parse_validCommand),
-    ]
 }

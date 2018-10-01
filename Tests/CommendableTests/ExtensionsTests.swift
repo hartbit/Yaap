@@ -58,7 +58,12 @@ class ExtensionsTests: XCTestCase {
         let fromSubstring = "before\(from)after".dropFirst(6).dropLast(5)
         let toSubstring = "prefix\(to)suffix".dropFirst(6).dropLast(6)
         let substringDistance = fromSubstring.levenshteinDistance(to: toSubstring)
-        XCTAssertEqual(stringDistance, substringDistance, "difference between levenshtein distance of string and substring", file: file, line: line)
+        XCTAssertEqual(
+            stringDistance,
+            substringDistance,
+            "difference between levenshtein distance of string and substring",
+            file: file,
+            line: line)
         return stringDistance
     }
 }
