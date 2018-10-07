@@ -6,7 +6,7 @@ public class GroupCommand: Command {
         super.init(documentation: documentation)
     }
 
-    public override func run() throws {
-        try subcommand.value.run()
+    public override func run(stdout: inout TextOutputStream, stderr: inout TextOutputStream) throws {
+        try subcommand.value?.run(stdout: &stdout, stderr: &stderr)
     }
 }

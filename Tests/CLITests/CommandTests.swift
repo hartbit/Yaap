@@ -4,7 +4,7 @@ import XCTest
 class CommandTests: XCTestCase {
     func test_generateUsage_minimal() {
         XCTAssertEqual(Command(documentation: "").generateUsage(prefix: "tool command"), """
-            tool command
+            tool command [options]
             """)
     }
 
@@ -28,7 +28,10 @@ class CommandTests: XCTestCase {
 
     func test_generateHelp_minimal() {
         XCTAssertEqual(Command(documentation: "").generateHelp(usagePrefix: "tool command"), """
-            USAGE: tool command
+            USAGE: tool command [options]
+
+            OPTIONS:
+              --help, -h    Print command documentation [default: false]
             """)
     }
 
@@ -37,7 +40,10 @@ class CommandTests: XCTestCase {
         XCTAssertEqual(command.generateHelp(usagePrefix: "tool command"), """
             OVERVIEW: This is great documentation
 
-            USAGE: tool command
+            USAGE: tool command [options]
+
+            OPTIONS:
+              --help, -h    Print command documentation [default: false]
             """)
     }
 
@@ -55,7 +61,10 @@ class CommandTests: XCTestCase {
         XCTAssertEqual(TestCommand().generateHelp(usagePrefix: "tool command"), """
             OVERVIEW: This is great documentation
 
-            USAGE: tool command <output> <files> <times>
+            USAGE: tool command [options] <output> <files> <times>
+
+            OPTIONS:
+              --help, -h    Print command documentation [default: false]
             """)
     }
 
@@ -73,11 +82,14 @@ class CommandTests: XCTestCase {
         XCTAssertEqual(TestCommand().generateHelp(usagePrefix: "tool command"), """
             OVERVIEW: This is great documentation
 
-            USAGE: tool command <output> <files> <times>
+            USAGE: tool command [options] <output> <files> <times>
 
             ARGUMENTS:
-              files     This is the input documentation
-              output    This is the output documentation
+              files         This is the input documentation
+              output        This is the output documentation
+
+            OPTIONS:
+              --help, -h    Print command documentation [default: false]
             """)
     }
 
@@ -105,6 +117,7 @@ class CommandTests: XCTestCase {
 
             OPTIONS:
               --extra          [default: 1]
+              --help, -h       Print command documentation [default: false]
               --verbose, -v    [default: false]
             """)
     }
@@ -133,6 +146,7 @@ class CommandTests: XCTestCase {
 
             OPTIONS:
               --extra          This is the extra documentation [default: 2]
+              --help, -h       Print command documentation [default: false]
               --verbose, -v    This is the verbose documentation [default: false]
             """)
     }
@@ -145,7 +159,7 @@ class CommandTests: XCTestCase {
         ])
 
         XCTAssertEqual(command.generateUsage(prefix: "tool command"), """
-            tool command subcommand
+            tool command [options] subcommand
             """)
     }
 
@@ -159,12 +173,15 @@ class CommandTests: XCTestCase {
         XCTAssertEqual(command.generateHelp(usagePrefix: "tool"), """
             OVERVIEW: This is the group command documentation
 
-            USAGE: tool subcommand
+            USAGE: tool [options] subcommand
+
+            OPTIONS:
+              --help, -h    Print command documentation [default: false]
 
             SUBCOMMANDS:
-              edit      The documentation for edit
-              random    
-              unedit    The documentation for unedit
+              edit          The documentation for edit
+              random        \n\
+              unedit        The documentation for unedit
             """)
     }
 }

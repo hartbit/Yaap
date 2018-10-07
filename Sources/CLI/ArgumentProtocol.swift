@@ -12,6 +12,7 @@ public protocol CommandProperty: ArgumentParser {
     var priority: Double { get }
     var usage: String? { get }
     var help: [ArgumentHelp] { get }
+
     func setup(withLabel label: String)
 }
 

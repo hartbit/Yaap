@@ -27,10 +27,12 @@ public class Option<T: ArgumentType>: CommandProperty {
 
         components.append("[default: \(defaultValue.description)]")
 
-        return [ArgumentHelp(
-            category: "OPTIONS",
-            label: label,
-            description: components.joined(separator: " "))]
+        return [
+            ArgumentHelp(
+                category: "OPTIONS",
+                label: label,
+                description: components.joined(separator: " "))
+        ]
     }
 
     public init(name: String? = nil, shorthand: Character? = nil, defaultValue: T, documentation: String? = nil) {

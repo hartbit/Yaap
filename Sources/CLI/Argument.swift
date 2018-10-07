@@ -10,10 +10,12 @@ public class Argument<T: ArgumentType>: CommandProperty {
 
     public var help: [ArgumentHelp] {
         if let name = name, let documentation = documentation {
-            return [ArgumentHelp(
-                category: "ARGUMENTS",
-                label: name,
-                description: documentation)]
+            return [
+                ArgumentHelp(
+                    category: "ARGUMENTS",
+                    label: name,
+                    description: documentation)
+            ]
         } else {
             return []
         }

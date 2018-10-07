@@ -55,16 +55,16 @@ class SubCommandTests: XCTestCase {
         var leftover: [String] = []
         XCTAssertThrowsError(
             try subCommand.parse(arguments: ["incorrect"], leftover: &leftover),
-            equals: InvalidSubCommandError(command: "incorrect", proposition: nil))
+            equals: InvalidSubCommandError(command: "incorrect", suggestion: nil))
         XCTAssertThrowsError(
             try subCommand.parse(arguments: ["edits"], leftover: &leftover),
-            equals: InvalidSubCommandError(command: "edits", proposition: "edit"))
+            equals: InvalidSubCommandError(command: "edits", suggestion: "edit"))
         XCTAssertThrowsError(
             try subCommand.parse(arguments: ["undit"], leftover: &leftover),
-            equals: InvalidSubCommandError(command: "undit", proposition: "unedit"))
+            equals: InvalidSubCommandError(command: "undit", suggestion: "unedit"))
         XCTAssertThrowsError(
             try subCommand.parse(arguments: ["unnedit"], leftover: &leftover),
-            equals: InvalidSubCommandError(command: "unnedit", proposition: "unedit"))
+            equals: InvalidSubCommandError(command: "unnedit", suggestion: "unedit"))
     }
 
     func test_parse_validCommand() throws {

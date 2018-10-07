@@ -1,9 +1,14 @@
 import Foundation
 
 open class Command: ArgumentParser {
-    let documentation: String
+    public let documentation: String
+    public let shouldPrintHelp = Option<Bool>(
+        name: "help",
+        shorthand: "h",
+        defaultValue: false,
+        documentation: "Print command documentation")
 
-    init(documentation: String) {
+    public init(documentation: String) {
         self.documentation = documentation
     }
 
@@ -46,25 +51,30 @@ open class Command: ArgumentParser {
     open func parse<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
     }
 
-    open func run() throws {
+    open func run(stdout: inout TextOutputStream, stderr: inout TextOutputStream) throws {
+        if shouldPrintHelp.value {
+            stdout.write(generateHelp(usagePrefix: ""))
+        }
     }
 }
 
 private extension Command {
     func sortedProperties() -> [CommandProperty] {
-        return Mirror(reflecting: self).children
-            .lazy
-            .compactMap({ child -> CommandProperty? in
-                if let property = child.value as? CommandProperty {
-                    if let label = child.label {
-                        property.setup(withLabel: label)
-                    }
-
-                    return property
-                } else {
-                    return nil
+        let mirrors = sequence(first: Mirror(reflecting: self), next: { $0.superclassMirror })
+        let children = mirrors.lazy.flatMap({ $0.children })
+        let properties = children.compactMap({ child -> CommandProperty? in
+            if let property = child.value as? CommandProperty {
+                if let label = child.label {
+                    property.setup(withLabel: label)
                 }
-            })
+
+                return property
+            } else {
+                return nil
+            }
+        })
+
+        let sortedProperties = properties
             .enumerated()
             .sorted(by: { (lhs, rhs) -> Bool in
                 if lhs.element.priority != rhs.element.priority {
@@ -74,5 +84,7 @@ private extension Command {
                 }
             })
             .map({ $0.element })
+
+        return sortedProperties
     }
 }

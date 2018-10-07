@@ -10,7 +10,7 @@ class GroupCommandTests: XCTestCase {
         ])
 
         XCTAssertEqual(command.generateUsage(prefix: "tool command"), """
-            tool command subcommand
+            tool command [options] subcommand
             """)
     }
 
@@ -24,12 +24,15 @@ class GroupCommandTests: XCTestCase {
         XCTAssertEqual(command.generateHelp(usagePrefix: "tool"), """
             OVERVIEW: This is the group command documentation
 
-            USAGE: tool subcommand
+            USAGE: tool [options] subcommand
+
+            OPTIONS:
+              --help, -h    Print command documentation [default: false]
 
             SUBCOMMANDS:
-              edit      The documentation for edit
-              random    
-              unedit    The documentation for unedit
+              edit          The documentation for edit
+              random        \n\
+              unedit        The documentation for unedit
             """)
     }
 }
