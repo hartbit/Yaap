@@ -48,7 +48,28 @@ open class Command: ArgumentParser {
         return output.joined(separator: "\n\n")
     }
 
-    open func parse<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
+    @discardableResult
+    public func parse(arguments: inout [String]) throws -> Bool {
+        var properties = sortedProperties()
+
+        func parseProperties() throws -> Bool {
+            for (index, property) in properties.enumerated() {
+                if try property.parse(arguments: &arguments) {
+                    properties.remove(at: index)
+                    return true
+                }
+            }
+
+            return false
+        }
+
+        while !arguments.isEmpty {
+            guard try parseProperties() else {
+                throw CommandUnexpectedArgumentError(argument: arguments.first!)
+            }
+        }
+
+        return true
     }
 
     open func run(stdout: inout TextOutputStream, stderr: inout TextOutputStream) throws {
@@ -86,5 +107,13 @@ private extension Command {
             .map({ $0.element })
 
         return sortedProperties
+    }
+}
+
+public struct CommandUnexpectedArgumentError: Error, Equatable {
+    public let argument: String
+
+    public var localizedDescription: String {
+        return "unexpected argument '\(argument)'"
     }
 }

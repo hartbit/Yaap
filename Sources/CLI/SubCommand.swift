@@ -27,8 +27,9 @@ public class SubCommand: CommandProperty {
         self.label = label
     }
 
-    public func parse<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
+    @discardableResult
+    public func parse(arguments: inout [String]) throws -> Bool {
+        guard let argument = arguments.first else {
             throw SubCommandMissingArgumentError()
         }
 
@@ -44,7 +45,9 @@ public class SubCommand: CommandProperty {
         }
 
         value = command
+        arguments.removeFirst()
         try command.parse(arguments: &arguments)
+        return true
     }
 }
 

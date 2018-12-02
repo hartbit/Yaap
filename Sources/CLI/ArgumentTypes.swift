@@ -1,202 +1,79 @@
 public protocol ArgumentType: CustomStringConvertible {
-    init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String
+    init(arguments: inout [String]) throws
+}
+
+extension LosslessStringConvertible where Self: ArgumentType {
+    public init(arguments: inout [String]) throws {
+        guard let argument = arguments.first else {
+            throw ParseError.missingArgument
+        }
+
+        guard let value = Self.init(argument) else {
+            throw ParseError.invalidFormat(argument)
+        }
+
+        self = value
+        arguments.removeFirst()
+    }
 }
 
 extension String: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
+    public init(arguments: inout [String]) throws {
+        guard let argument = arguments.first else {
             throw ParseError.missingArgument
         }
 
         self = argument
+        arguments.removeFirst()
     }
 }
 
 extension Bool: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let bool = Bool(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = bool
-    }
 }
 
 extension Int: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let int = Int(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = int
-    }
 }
 
 extension Int8: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let int = Int8(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = int
-    }
 }
 
 extension Int16: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let int = Int16(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = int
-    }
 }
 
 extension Int32: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let int = Int32(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = int
-    }
 }
 
 extension Int64: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let int = Int64(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = int
-    }
 }
 
 extension UInt: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let int = UInt(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = int
-    }
 }
 
 extension UInt8: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let int = UInt8(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = int
-    }
 }
 
 extension UInt16: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let int = UInt16(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = int
-    }
 }
 
 extension UInt32: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let int = UInt32(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = int
-    }
 }
 
 extension UInt64: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let int = UInt64(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = int
-    }
 }
 
 extension Float: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let float = Float(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = float
-    }
 }
 
 extension Double: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-        guard let argument = arguments.next() else {
-            throw ParseError.missingArgument
-        }
-
-        guard let double = Double(argument) else {
-            throw ParseError.invalidFormat(argument)
-        }
-
-        self = double
-    }
 }
 
 extension Array: ArgumentType where Element: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
+    public init(arguments: inout [String]) throws {
         self.init()
+
+        guard arguments.count > 0 else {
+            throw ParseError.missingArgument
+        }
 
         while true {
             do {
@@ -209,8 +86,12 @@ extension Array: ArgumentType where Element: ArgumentType {
 }
 
 extension Set: ArgumentType where Element: ArgumentType {
-    public init<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
+    public init(arguments: inout [String]) throws {
         self.init()
+
+        guard arguments.count > 0 else {
+            throw ParseError.missingArgument
+        }
 
         while true {
             do {

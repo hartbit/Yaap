@@ -32,9 +32,11 @@ public class Argument<T: ArgumentType>: CommandProperty {
         }
     }
 
-    public func parse<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
+    @discardableResult
+    public func parse(arguments: inout [String]) throws -> Bool {
         do {
             value = try T.init(arguments: &arguments)
+            return true
         } catch ParseError.missingArgument {
             throw MissingArgumentError(argument: name ?? "")
         } catch ParseError.invalidFormat(let value) {

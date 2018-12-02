@@ -2,7 +2,7 @@ import XCTest
 @testable import CLI
 
 class GroupCommandTests: XCTestCase {
-    func testGenerateUsage() {
+    func test_generateUsage() {
         let command = GroupCommand(commands: [
             "edit": Command(documentation: "The documentation for edit"),
             "unedit": Command(documentation: "The documentation for unedit"),
@@ -14,7 +14,7 @@ class GroupCommandTests: XCTestCase {
             """)
     }
 
-    func testGenerateHelp() {
+    func test_generateHelp() {
         let command = GroupCommand(commands: [
             "edit": Command(documentation: "The documentation for edit"),
             "unedit": Command(documentation: "The documentation for unedit"),
@@ -34,5 +34,31 @@ class GroupCommandTests: XCTestCase {
               random        \n\
               unedit        The documentation for unedit
             """)
+    }
+
+    func test_parse() throws {
+        class SimpleCommand: Command {
+            let argument = Argument<String>()
+        }
+
+        class EditCommand: SimpleCommand {}
+        class UneditCommand: SimpleCommand {}
+        class RandomCommand: SimpleCommand {}
+
+        let command = GroupCommand(commands: [
+            "edit": EditCommand(documentation: "The documentation for edit"),
+            "unedit": UneditCommand(documentation: "The documentation for unedit"),
+            "random": RandomCommand(documentation: "The documentation for random")
+        ])
+
+        var arguments = ["edit", "something"]
+        try command.parse(arguments: &arguments)
+        XCTAssertTrue(command.subcommand.value is EditCommand)
+        XCTAssertEqual((command.subcommand.value as? EditCommand)?.argument.value, "something")
+
+        arguments = ["unedit", "something-else"]
+        try command.parse(arguments: &arguments)
+        XCTAssertTrue(command.subcommand.value is UneditCommand)
+        XCTAssertEqual((command.subcommand.value as? UneditCommand)?.argument.value, "something-else")
     }
 }

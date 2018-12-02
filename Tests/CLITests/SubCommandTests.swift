@@ -37,10 +37,8 @@ class SubCommandTests: XCTestCase {
 
         subCommand.setup(withLabel: "label")
 
-        var leftover: [String] = []
-        XCTAssertThrowsError(
-            try subCommand.parse(arguments: [], leftover: &leftover),
-            equals: SubCommandMissingArgumentError())
+        var arguments: [String] = []
+        XCTAssertThrowsError(try subCommand.parse(arguments: &arguments), equals: SubCommandMissingArgumentError())
     }
 
     func test_parse_invalidValue() {
@@ -52,18 +50,24 @@ class SubCommandTests: XCTestCase {
 
         subCommand.setup(withLabel: "label")
 
-        var leftover: [String] = []
+        var arguments = ["incorrect"]
         XCTAssertThrowsError(
-            try subCommand.parse(arguments: ["incorrect"], leftover: &leftover),
+            try subCommand.parse(arguments: &arguments),
             equals: InvalidSubCommandError(command: "incorrect", suggestion: nil))
+
+        arguments = ["edits"]
         XCTAssertThrowsError(
-            try subCommand.parse(arguments: ["edits"], leftover: &leftover),
+            try subCommand.parse(arguments: &arguments),
             equals: InvalidSubCommandError(command: "edits", suggestion: "edit"))
+
+        arguments = ["undit"]
         XCTAssertThrowsError(
-            try subCommand.parse(arguments: ["undit"], leftover: &leftover),
+            try subCommand.parse(arguments: &arguments),
             equals: InvalidSubCommandError(command: "undit", suggestion: "unedit"))
+
+        arguments = ["unnedit"]
         XCTAssertThrowsError(
-            try subCommand.parse(arguments: ["unnedit"], leftover: &leftover),
+            try subCommand.parse(arguments: &arguments),
             equals: InvalidSubCommandError(command: "unnedit", suggestion: "unedit"))
     }
 
@@ -71,11 +75,10 @@ class SubCommandTests: XCTestCase {
         class MockCommand: Command {
             private(set) var arguments: [String] = []
 
-            override func parse<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
-                self.arguments.removeAll()
-                while let argument = arguments.next() {
-                    self.arguments.append(argument)
-                }
+            override func parse(arguments: inout [String]) throws -> Bool {
+                self.arguments = arguments
+                arguments.removeAll()
+                return true
             }
         }
 
@@ -84,8 +87,8 @@ class SubCommandTests: XCTestCase {
 
         subCommand.setup(withLabel: "label")
 
-        var leftover: [String] = []
-        try subCommand.parse(arguments: ["cmd", "arg1", "arg2"], leftover: &leftover)
+        var arguments = ["cmd", "arg1", "arg2"]
+        try subCommand.parse(arguments: &arguments)
         XCTAssert(subCommand.value === mockCommand)
         XCTAssertEqual(mockCommand.arguments, ["arg1", "arg2"])
     }

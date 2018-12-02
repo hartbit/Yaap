@@ -3,160 +3,169 @@ import XCTest
 
 class ArgumentTypesTests: XCTestCase {
     func test_string_noValue() {
-        var leftover: [String] = []
-        XCTAssertThrowsError(try String(arguments: [], leftover: &leftover))
+        var arguments: [String] = []
+        XCTAssertThrowsError(try String(arguments: &arguments), equals: ParseError.missingArgument)
     }
 
     func test_string_validValue() {
-        var leftover: [String] = []
-        XCTAssertEqual(try String(arguments: ["hello", "world"], leftover: &leftover), "hello")
-        XCTAssertEqual(leftover, ["world"])
+        var arguments = ["hello", "world"]
+        XCTAssertEqual(try String(arguments: &arguments), "hello")
+        XCTAssertEqual(arguments, ["world"])
     }
 
     func test_bool_noValue() throws {
-        var leftover: [String] = []
-        XCTAssertThrowsError(try Bool(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
+        var arguments: [String] = []
+        XCTAssertThrowsError(try Bool(arguments: &arguments), equals: ParseError.missingArgument)
     }
 
     func test_bool_invalidValue() {
-        var leftover: [String] = []
-        XCTAssertThrowsError(
-            try Bool(arguments: ["0"], leftover: &leftover),
-            equals: ParseError.invalidFormat("0"))
-        XCTAssertThrowsError(
-            try Bool(arguments: ["hello"], leftover: &leftover),
-            equals: ParseError.invalidFormat("hello"))
+        var arguments = ["0"]
+        XCTAssertThrowsError(try Bool(arguments: &arguments), equals: ParseError.invalidFormat("0"))
+        arguments = ["hello"]
+        XCTAssertThrowsError(try Bool(arguments: &arguments), equals: ParseError.invalidFormat("hello"))
     }
 
     func test_bool_validValue() {
-        var leftover: [String] = []
-        XCTAssertEqual(try Bool(arguments: ["true", "false"], leftover: &leftover), true)
-        XCTAssertEqual(leftover, ["false"])
-        XCTAssertEqual(try Bool(arguments: ["false", "hello"], leftover: &leftover), false)
-        XCTAssertEqual(leftover, ["hello"])
+        var arguments = ["true", "false"]
+        XCTAssertEqual(try Bool(arguments: &arguments), true)
+        XCTAssertEqual(arguments, ["false"])
+
+        arguments = ["false", "hello"]
+        XCTAssertEqual(try Bool(arguments: &arguments), false)
+        XCTAssertEqual(arguments, ["hello"])
     }
 
     func test_integers_noValue() {
-        var leftover: [String] = []
-        XCTAssertThrowsError(try Int(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
-        XCTAssertThrowsError(try Int8(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
-        XCTAssertThrowsError(try Int16(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
-        XCTAssertThrowsError(try Int32(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
-        XCTAssertThrowsError(try Int64(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
-        XCTAssertThrowsError(try UInt(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
-        XCTAssertThrowsError(try UInt8(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
-        XCTAssertThrowsError(try UInt16(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
-        XCTAssertThrowsError(try UInt32(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
-        XCTAssertThrowsError(try UInt64(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
+        var arguments: [String] = []
+        XCTAssertThrowsError(try Int(arguments: &arguments), equals: ParseError.missingArgument)
+        XCTAssertThrowsError(try Int8(arguments: &arguments), equals: ParseError.missingArgument)
+        XCTAssertThrowsError(try Int16(arguments: &arguments), equals: ParseError.missingArgument)
+        XCTAssertThrowsError(try Int32(arguments: &arguments), equals: ParseError.missingArgument)
+        XCTAssertThrowsError(try Int64(arguments: &arguments), equals: ParseError.missingArgument)
+        XCTAssertThrowsError(try UInt(arguments: &arguments), equals: ParseError.missingArgument)
+        XCTAssertThrowsError(try UInt8(arguments: &arguments), equals: ParseError.missingArgument)
+        XCTAssertThrowsError(try UInt16(arguments: &arguments), equals: ParseError.missingArgument)
+        XCTAssertThrowsError(try UInt32(arguments: &arguments), equals: ParseError.missingArgument)
+        XCTAssertThrowsError(try UInt64(arguments: &arguments), equals: ParseError.missingArgument)
     }
 
     func test_integers_invalidValue() {
-        var leftover: [String] = []
-        XCTAssertThrowsError(
-            try Int(arguments: ["two"], leftover: &leftover),
-            equals: ParseError.invalidFormat("two"))
-        XCTAssertThrowsError(
-            try Int8(arguments: ["-129"], leftover: &leftover),
-            equals: ParseError.invalidFormat("-129"))
-        XCTAssertThrowsError(
-            try Int16(arguments: ["4834984935"], leftover: &leftover),
-            equals: ParseError.invalidFormat("4834984935"))
-        XCTAssertThrowsError(
-            try Int32(arguments: ["really"], leftover: &leftover),
-            equals: ParseError.invalidFormat("really"))
-        XCTAssertThrowsError(
-            try Int64(arguments: ["2.6"], leftover: &leftover),
-            equals: ParseError.invalidFormat("2.6"))
-        XCTAssertThrowsError(
-            try UInt(arguments: ["three"], leftover: &leftover),
-            equals: ParseError.invalidFormat("three"))
-        XCTAssertThrowsError(
-            try UInt8(arguments: ["-2"], leftover: &leftover),
-            equals: ParseError.invalidFormat("-2"))
-        XCTAssertThrowsError(
-            try UInt16(arguments: ["10e45"], leftover: &leftover),
-            equals: ParseError.invalidFormat("10e45"))
-        XCTAssertThrowsError(
-            try UInt32(arguments: ["totally"], leftover: &leftover),
-            equals: ParseError.invalidFormat("totally"))
-        XCTAssertThrowsError(
-            try UInt64(arguments: ["big"], leftover: &leftover),
-            equals: ParseError.invalidFormat("big"))
+        var arguments = ["two"]
+        XCTAssertThrowsError(try Int(arguments: &arguments), equals: ParseError.invalidFormat("two"))
+        XCTAssertEqual(arguments, ["two"])
+
+        arguments = ["-129"]
+        XCTAssertThrowsError(try Int8(arguments: &arguments), equals: ParseError.invalidFormat("-129"))
+        XCTAssertEqual(arguments, ["-129"])
+
+        arguments = ["4834984935"]
+        XCTAssertThrowsError(try Int16(arguments: &arguments), equals: ParseError.invalidFormat("4834984935"))
+        XCTAssertEqual(arguments, ["4834984935"])
+
+        arguments = ["really"]
+        XCTAssertThrowsError(try Int32(arguments: &arguments), equals: ParseError.invalidFormat("really"))
+        XCTAssertEqual(arguments, ["really"])
+
+        arguments = ["2.6"]
+        XCTAssertThrowsError(try Int64(arguments: &arguments), equals: ParseError.invalidFormat("2.6"))
+        XCTAssertEqual(arguments, ["2.6"])
+
+        arguments = ["three"]
+        XCTAssertThrowsError(try UInt(arguments: &arguments), equals: ParseError.invalidFormat("three"))
+        XCTAssertEqual(arguments, ["three"])
+
+        arguments = ["-2"]
+        XCTAssertThrowsError(try UInt8(arguments: &arguments), equals: ParseError.invalidFormat("-2"))
+        XCTAssertEqual(arguments, ["-2"])
+
+        arguments = ["10e45"]
+        XCTAssertThrowsError(try UInt16(arguments: &arguments), equals: ParseError.invalidFormat("10e45"))
+        XCTAssertEqual(arguments, ["10e45"])
+
+        arguments = ["totally"]
+        XCTAssertThrowsError(try UInt32(arguments: &arguments), equals: ParseError.invalidFormat("totally"))
+        XCTAssertEqual(arguments, ["totally"])
+
+        arguments = ["big"]
+        XCTAssertThrowsError(try UInt64(arguments: &arguments), equals: ParseError.invalidFormat("big"))
+        XCTAssertEqual(arguments, ["big"])
     }
 
     func test_integers_validValue() {
-        var leftover: [String] = []
-        XCTAssertEqual(try Int(arguments: ["4", "3", "other"], leftover: &leftover), 4)
-        XCTAssertEqual(leftover, ["3", "other"])
-        XCTAssertEqual(try Int8(arguments: ["-128", "256", "other"], leftover: &leftover), -128)
-        XCTAssertEqual(leftover, ["256", "other"])
-        XCTAssertEqual(try Int16(arguments: ["58", "hello", "world"], leftover: &leftover), 58)
-        XCTAssertEqual(leftover, ["hello", "world"])
-        XCTAssertEqual(try Int32(arguments: ["95", "mr", "small"], leftover: &leftover), 95)
-        XCTAssertEqual(leftover, ["mr", "small"])
-        XCTAssertEqual(try Int64(arguments: ["-29", "smell", "5"], leftover: &leftover), -29)
-        XCTAssertEqual(leftover, ["smell", "5"])
-        XCTAssertEqual(try UInt(arguments: ["4", "3", "other"], leftover: &leftover), 4)
-        XCTAssertEqual(leftover, ["3", "other"])
-        XCTAssertEqual(try UInt8(arguments: ["128", "256", "other"], leftover: &leftover), 128)
-        XCTAssertEqual(leftover, ["256", "other"])
-        XCTAssertEqual(try UInt16(arguments: ["58", "hello", "world"], leftover: &leftover), 58)
-        XCTAssertEqual(leftover, ["hello", "world"])
-        XCTAssertEqual(try UInt32(arguments: ["95", "mr", "small"], leftover: &leftover), 95)
-        XCTAssertEqual(leftover, ["mr", "small"])
-        XCTAssertEqual(try UInt64(arguments: ["29", "smell", "5"], leftover: &leftover), 29)
-        XCTAssertEqual(leftover, ["smell", "5"])
+        var arguments = ["4", "-128", "58", "95", "-29", "4", "128", "58", "95", "29", "other"]
+        XCTAssertEqual(try Int(arguments: &arguments), 4)
+        XCTAssertEqual(arguments, ["-128", "58", "95", "-29", "4", "128", "58", "95", "29", "other"])
+        XCTAssertEqual(try Int8(arguments: &arguments), -128)
+        XCTAssertEqual(arguments, ["58", "95", "-29", "4", "128", "58", "95", "29", "other"])
+        XCTAssertEqual(try Int16(arguments: &arguments), 58)
+        XCTAssertEqual(arguments, ["95", "-29", "4", "128", "58", "95", "29", "other"])
+        XCTAssertEqual(try Int32(arguments: &arguments), 95)
+        XCTAssertEqual(arguments, ["-29", "4", "128", "58", "95", "29", "other"])
+        XCTAssertEqual(try Int64(arguments: &arguments), -29)
+        XCTAssertEqual(arguments, ["4", "128", "58", "95", "29", "other"])
+        XCTAssertEqual(try UInt(arguments: &arguments), 4)
+        XCTAssertEqual(arguments, ["128", "58", "95", "29", "other"])
+        XCTAssertEqual(try UInt8(arguments: &arguments), 128)
+        XCTAssertEqual(arguments, ["58", "95", "29", "other"])
+        XCTAssertEqual(try UInt16(arguments: &arguments), 58)
+        XCTAssertEqual(arguments, ["95", "29", "other"])
+        XCTAssertEqual(try UInt32(arguments: &arguments), 95)
+        XCTAssertEqual(arguments, ["29", "other"])
+        XCTAssertEqual(try UInt64(arguments: &arguments), 29)
+        XCTAssertEqual(arguments, ["other"])
     }
 
     func test_floatingPoints_noValue() {
-        var leftover: [String] = []
-        XCTAssertThrowsError(try Float(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
-        XCTAssertThrowsError(try Double(arguments: [], leftover: &leftover), equals: ParseError.missingArgument)
+        var arguments: [String] = []
+        XCTAssertThrowsError(try Float(arguments: &arguments), equals: ParseError.missingArgument)
+        XCTAssertThrowsError(try Double(arguments: &arguments), equals: ParseError.missingArgument)
     }
 
     func test_floatingPoints_invalidValue() {
-        var leftover: [String] = []
-        XCTAssertThrowsError(
-            try Float(arguments: ["two"], leftover: &leftover),
-            equals: ParseError.invalidFormat("two"))
-        XCTAssertThrowsError(
-            try Double(arguments: ["74eff"], leftover: &leftover),
-            equals: ParseError.invalidFormat("74eff"))
+        var arguments = ["two"]
+        XCTAssertThrowsError(try Float(arguments: &arguments), equals: ParseError.invalidFormat("two"))
+        XCTAssertEqual(arguments, ["two"])
+
+        arguments = ["74eff"]
+        XCTAssertThrowsError(try Double(arguments: &arguments), equals: ParseError.invalidFormat("74eff"))
+        XCTAssertEqual(arguments, ["74eff"])
     }
 
     func test_floatingPoints_validValue() {
-        var leftover: [String] = []
-        XCTAssertEqual(try Float(arguments: ["2.5", "3", "other"], leftover: &leftover), 2.5)
-        XCTAssertEqual(leftover, ["3", "other"])
-        XCTAssertEqual(try Float(arguments: ["56", "256", "other"], leftover: &leftover), 56)
-        XCTAssertEqual(leftover, ["256", "other"])
-        XCTAssertEqual(try Double(arguments: ["5e10", "hello", "world"], leftover: &leftover), 5e10)
-        XCTAssertEqual(leftover, ["hello", "world"])
-        XCTAssertEqual(try Double(arguments: ["7.84394", "mr", "small"], leftover: &leftover), 7.84394)
-        XCTAssertEqual(leftover, ["mr", "small"])
+        var arguments = ["2.5", "56", "5e10", "7.84394", "hello", "world"]
+        XCTAssertEqual(try Float(arguments: &arguments), 2.5)
+        XCTAssertEqual(arguments, ["56", "5e10", "7.84394", "hello", "world"])
+        XCTAssertEqual(try Float(arguments: &arguments), 56)
+        XCTAssertEqual(arguments, ["5e10", "7.84394", "hello", "world"])
+        XCTAssertEqual(try Double(arguments: &arguments), 5e10)
+        XCTAssertEqual(arguments, ["7.84394", "hello", "world"])
+        XCTAssertEqual(try Double(arguments: &arguments), 7.84394)
+        XCTAssertEqual(arguments, ["hello", "world"])
     }
 
     func test_collections_noValue() {
-        var leftover: [String] = []
-        XCTAssertEqual(try [String](arguments: [], leftover: &leftover), [])
-        XCTAssertEqual(try Set<Int>(arguments: [], leftover: &leftover), [])
+        var arguments: [String] = []
+        XCTAssertThrowsError(try [String](arguments: &arguments), equals: ParseError.missingArgument)
+        XCTAssertThrowsError(try Set<Int>(arguments: &arguments), equals: ParseError.missingArgument)
     }
 
     func test_collections_invalidValue() {
-        var leftover: [String] = []
-        XCTAssertThrowsError(
-            try [Int](arguments: ["invalid"], leftover: &leftover),
-            equals: ParseError.invalidFormat("invalid"))
-        XCTAssertThrowsError(
-            try Set<Float>(arguments: ["5", "not"], leftover: &leftover),
-            equals: ParseError.invalidFormat("not"))
+        var arguments = ["invalid"]
+        XCTAssertThrowsError(try [Int](arguments: &arguments), equals: ParseError.invalidFormat("invalid"))
+        XCTAssertEqual(arguments, ["invalid"])
+
+        arguments = ["5", "not"]
+        XCTAssertThrowsError(try Set<Float>(arguments: &arguments), equals: ParseError.invalidFormat("not"))
+        XCTAssertEqual(arguments, ["not"])
     }
 
     func test_collections_validValue() {
-        var leftover: [String] = []
-        XCTAssertEqual(try [String](arguments: ["hello", "world", "!"], leftover: &leftover), ["hello", "world", "!"])
-        XCTAssertEqual(leftover, [])
-        XCTAssertEqual(try Set<Int>(arguments: ["4", "-2", "8", "-2"], leftover: &leftover), Set([4, -2, 8]))
-        XCTAssertEqual(leftover, [])
+        var arguments = ["hello", "world", "!"]
+        XCTAssertEqual(try [String](arguments: &arguments), ["hello", "world", "!"])
+        XCTAssertEqual(arguments, [])
+
+        arguments = ["4", "-2", "8", "-2"]
+        XCTAssertEqual(try Set<Int>(arguments: &arguments), Set([4, -2, 8]))
+        XCTAssertEqual(arguments, [])
     }
 }

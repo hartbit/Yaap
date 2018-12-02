@@ -10,22 +10,6 @@ extension ArgumentHelp: Equatable {
     }
 }
 
-extension ArgumentType {
-    init(arguments: [String], leftover: inout [String]) throws {
-        var iterator = arguments.makeIterator()
-        try self.init(arguments: &iterator)
-        leftover = Array(iterator)
-    }
-}
-
-extension ArgumentParser {
-    func parse(arguments: [String], leftover: inout [String]) throws {
-        var iterator = arguments.makeIterator()
-        try parse(arguments: &iterator)
-        leftover = Array(iterator)
-    }
-}
-
 func XCTAssertThrowsError<T, E: Error & Equatable>(
     _ expression: @autoclosure () throws -> T,
     equals expectedError: E,

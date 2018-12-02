@@ -1,11 +1,20 @@
 public struct Tool {
-    let name: String
-    let version: String
-    let command: Command
+    public let name: String
+    public let version: String
+    public let command: Command
+    public var outputStream: TextOutputStream = FileOutputStream.standardOutput
+    public var errorStream: TextOutputStream = FileOutputStream.standardError
 
-    init(name: String, version: String, command: Command) {
+    public init(name: String, version: String, command: Command) {
         self.name = name
         self.version = version
         self.command = command
+    }
+
+    public func run() {
+    }
+
+    public func parse(arguments: [String]) {
+        
     }
 }

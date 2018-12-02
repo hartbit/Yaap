@@ -55,43 +55,43 @@ class ArgumentTests: XCTestCase {
     }
 
     func test_parse_noArguments() {
-        var leftover: [String] = []
+        var arguments: [String] = []
 
         let argument1 = Argument<Int>(name: nil, documentation: nil)
         argument1.setup(withLabel: "label")
         XCTAssertThrowsError(
-            try argument1.parse(arguments: [], leftover: &leftover),
+            try argument1.parse(arguments: &arguments),
             equals: MissingArgumentError(argument: "label"))
 
         let argument2 = Argument<Int>(name: "argument-name", documentation: nil)
         argument2.setup(withLabel: "label")
         XCTAssertThrowsError(
-            try argument2.parse(arguments: [], leftover: &leftover),
+            try argument2.parse(arguments: &arguments),
             equals: MissingArgumentError(argument: "argument-name"))
     }
 
     func test_parse_invalidValue() {
-        var leftover: [String] = []
-
         let argument1 = Argument<Int>(name: nil, documentation: nil)
         argument1.setup(withLabel: "label")
+        var arguments = ["2.5"]
         XCTAssertThrowsError(
-            try argument1.parse(arguments: ["2.5"], leftover: &leftover),
+            try argument1.parse(arguments: &arguments),
             equals: ArgumentInvalidFormatError(argument: "label", value: "2.5"))
 
         let argument2 = Argument<Int>(name: "agument-name", documentation: nil)
         argument2.setup(withLabel: "label")
+        arguments = ["two"]
         XCTAssertThrowsError(
-            try argument2.parse(arguments: ["two"], leftover: &leftover),
+            try argument2.parse(arguments: &arguments),
             equals: ArgumentInvalidFormatError(argument: "agument-name", value: "two"))
     }
 
     func test_parse_validValue() throws {
         let argument = Argument<Int>(name: nil, documentation: nil)
         argument.setup(withLabel: "label")
-        var leftover: [String] = []
-        try argument.parse(arguments: ["5", "2", "whatever"], leftover: &leftover)
+        var arguments = ["5", "2", "whatever"]
+        try argument.parse(arguments: &arguments)
         XCTAssertEqual(argument.value, 5)
-        XCTAssertEqual(leftover, ["2", "whatever"])
+        XCTAssertEqual(arguments, ["2", "whatever"])
     }
 }

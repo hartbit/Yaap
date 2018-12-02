@@ -184,4 +184,26 @@ class CommandTests: XCTestCase {
               unedit        The documentation for unedit
             """)
     }
+
+    func test_parse() throws {
+        class TestCommand: Command {
+            let input = Argument<String>()
+            let times = Argument<Int>()
+            let verbose = Option<Bool>(shorthand: "v", defaultValue: false)
+            let extra = Option<Int>(defaultValue: 2)
+
+            init() {
+                super.init(documentation: "This is great documentation")
+            }
+        }
+
+        let command = TestCommand()
+        var arguments = ["--extra", "1", "inputfile.txt", "4"]
+        try command.parse(arguments: &arguments)
+
+        XCTAssertEqual(command.input.value, "inputfile.txt")
+        XCTAssertEqual(command.times.value, 4)
+        XCTAssertEqual(command.verbose.value, false)
+        XCTAssertEqual(command.extra.value, 1)
+    }
 }

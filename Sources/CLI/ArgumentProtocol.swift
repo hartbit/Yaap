@@ -5,7 +5,8 @@ public struct ArgumentHelp {
 }
 
 public protocol ArgumentParser: class {
-    func parse<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String
+    @discardableResult
+    func parse(arguments: inout [String]) throws -> Bool
 }
 
 public protocol CommandProperty: ArgumentParser {

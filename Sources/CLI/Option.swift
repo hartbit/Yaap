@@ -49,7 +49,8 @@ public class Option<T: ArgumentType>: CommandProperty {
         }
     }
 
-    public func parse<I: IteratorProtocol>(arguments: inout I) throws where I.Element == String {
+    @discardableResult
+    public func parse(arguments: inout [String]) throws -> Bool {
         guard let name = name else {
             throw ParseError.missingArgument
         }
@@ -60,25 +61,36 @@ public class Option<T: ArgumentType>: CommandProperty {
             starters.append("-\(shorthand)")
         }
 
-        while let argument = arguments.next() {
-            guard !starters.contains(argument) else {
-                if type(of: value) == Bool.self {
-                    value = true as! T
-                } else {
-                    do {
-                        value = try T.init(arguments: &arguments)
-                    } catch ParseError.missingArgument {
-                        throw OptionMissingArgumentError(option: argument)
-                    } catch ParseError.invalidFormat(let value) {
-                        throw OptionInvalidFormatError(option: argument, value: value)
-                    }
+        if let argument = arguments.first, starters.contains(argument) {
+            arguments.removeFirst()
+
+            if type(of: value) == Bool.self {
+                value = true as! T
+            } else {
+                let endIndex = arguments.firstIndex(where: { $0.starts(with: "-") }) ?? arguments.endIndex
+
+                do {
+                    var innerArguments = [String](arguments[..<endIndex])
+                    value = try T.init(arguments: &innerArguments)
+                    arguments = innerArguments + arguments[endIndex..<arguments.endIndex]
+                } catch ParseError.missingArgument {
+                    throw OptionMissingArgumentError(option: argument)
+                } catch ParseError.invalidFormat(let value) {
+                    throw OptionInvalidFormatError(option: argument, value: value)
                 }
-
-                return
             }
-        }
 
-        value = defaultValue
+            return true
+        } else {
+            value = defaultValue
+            return false
+        }
+    }
+}
+
+extension Option where T == Bool {
+    public convenience init(name: String? = nil, shorthand: Character? = nil, documentation: String? = nil) {
+        self.init(name: name, shorthand: shorthand, defaultValue: false, documentation: documentation)
     }
 }
 
