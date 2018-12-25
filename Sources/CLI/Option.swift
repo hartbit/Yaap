@@ -55,36 +55,41 @@ public class Option<T: ArgumentType>: CommandProperty {
             throw ParseError.missingArgument
         }
 
-        var starters = ["--\(name)"]
-
-        if let shorthand = shorthand {
-            starters.append("-\(shorthand)")
+        guard let argument = arguments.first else {
+            value = defaultValue
+            return false
         }
 
-        if let argument = arguments.first, starters.contains(argument) {
+        if argument == "--\(name)" {
             arguments.removeFirst()
-
-            if type(of: value) == Bool.self {
-                value = true as! T
+        } else if let shorthand = shorthand, argument.starts(with: "-\(shorthand)") {
+            if argument.count == 2 {
+                arguments.removeFirst()
             } else {
-                let endIndex = arguments.firstIndex(where: { $0.starts(with: "-") }) ?? arguments.endIndex
-
-                do {
-                    var innerArguments = [String](arguments[..<endIndex])
-                    value = try T.init(arguments: &innerArguments)
-                    arguments = innerArguments + arguments[endIndex..<arguments.endIndex]
-                } catch ParseError.missingArgument {
-                    throw OptionMissingArgumentError(option: argument)
-                } catch ParseError.invalidFormat(let value) {
-                    throw OptionInvalidFormatError(option: argument, value: value)
-                }
+                arguments[0] = "-" + argument.dropFirst(2)
             }
-
-            return true
         } else {
             value = defaultValue
             return false
         }
+
+        if type(of: value) == Bool.self {
+            value = true as! T
+        } else {
+            let endIndex = arguments.firstIndex(where: { $0.starts(with: "-") }) ?? arguments.endIndex
+
+            do {
+                var innerArguments = [String](arguments[..<endIndex])
+                value = try T.init(arguments: &innerArguments)
+                arguments = innerArguments + arguments[endIndex..<arguments.endIndex]
+            } catch ParseError.missingArgument {
+                throw OptionMissingArgumentError(option: argument)
+            } catch ParseError.invalidFormat(let value) {
+                throw OptionInvalidFormatError(option: argument, value: value)
+            }
+        }
+
+        return true
     }
 }
 

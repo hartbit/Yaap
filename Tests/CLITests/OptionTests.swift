@@ -76,17 +76,28 @@ class OptionTests: XCTestCase {
         let option = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
         option.setup(withLabel: "label")
         var arguments: [String] = []
-        try option.parse(arguments: &arguments)
+        XCTAssertFalse(try option.parse(arguments: &arguments))
         XCTAssertEqual(option.value, 42)
     }
 
     func test_parse_noStart() throws {
         let option = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
         option.setup(withLabel: "label")
+
         var arguments = ["one", "2", "3.0"]
-        try option.parse(arguments: &arguments)
+        XCTAssertFalse(try option.parse(arguments: &arguments))
         XCTAssertEqual(option.value, 42)
         XCTAssertEqual(arguments, ["one", "2", "3.0"])
+
+        arguments = ["--other", "2"]
+        XCTAssertFalse(try option.parse(arguments: &arguments))
+        XCTAssertEqual(option.value, 42)
+        XCTAssertEqual(arguments, ["--other", "2"])
+
+        arguments = ["-o", "test"]
+        XCTAssertFalse(try option.parse(arguments: &arguments))
+        XCTAssertEqual(option.value, 42)
+        XCTAssertEqual(arguments, ["-o", "test"])
     }
 
     func test_parse_noValue() throws {
@@ -124,12 +135,12 @@ class OptionTests: XCTestCase {
         option1.setup(withLabel: "label")
 
         var arguments = ["--option", "6", "8"]
-        try option1.parse(arguments: &arguments)
+        XCTAssertTrue(try option1.parse(arguments: &arguments))
         XCTAssertEqual(option1.value, 6)
         XCTAssertEqual(arguments, ["8"])
 
         arguments = ["-o", "78"]
-        try option1.parse(arguments: &arguments)
+        XCTAssertTrue(try option1.parse(arguments: &arguments))
         XCTAssertEqual(option1.value, 78)
         XCTAssertEqual(arguments, [])
 
@@ -137,12 +148,12 @@ class OptionTests: XCTestCase {
         option2.setup(withLabel: "label")
 
         arguments = ["--label", "23"]
-        try option2.parse(arguments: &arguments)
+        XCTAssertTrue(try option2.parse(arguments: &arguments))
         XCTAssertEqual(option2.value, 23)
         XCTAssertEqual(arguments, [])
 
         arguments = ["-l", "98"]
-        try option2.parse(arguments: &arguments)
+        XCTAssertTrue(try option2.parse(arguments: &arguments))
         XCTAssertEqual(option2.value, 8)
         XCTAssertEqual(arguments, ["-l", "98"])
     }
@@ -152,12 +163,12 @@ class OptionTests: XCTestCase {
         option.setup(withLabel: "label")
 
         var arguments = ["--option", "other"]
-        try option.parse(arguments: &arguments)
+        XCTAssertTrue(try option.parse(arguments: &arguments))
         XCTAssertEqual(option.value, true)
         XCTAssertEqual(arguments, ["other"])
 
         arguments = ["-o"]
-        try option.parse(arguments: &arguments)
+        XCTAssertTrue(try option.parse(arguments: &arguments))
         XCTAssertEqual(option.value, true)
         XCTAssertEqual(arguments, [])
     }
@@ -175,8 +186,23 @@ class OptionTests: XCTestCase {
         option1.setup(withLabel: "label")
 
         arguments = ["--option", "one", "two", "--other", "three"]
-        try option2.parse(arguments: &arguments)
+        XCTAssertTrue(try option2.parse(arguments: &arguments))
         XCTAssertEqual(option2.value, ["one", "two"])
         XCTAssertEqual(arguments, ["--other", "three"])
+    }
+
+    func test_parse_multipleFlags() throws {
+        let option = Option<Bool>(name: "option", shorthand: "o")
+        option.setup(withLabel: "label")
+
+        var arguments = ["-ab"]
+        XCTAssertFalse(try option.parse(arguments: &arguments))
+        XCTAssertEqual(option.value, false)
+        XCTAssertEqual(arguments, ["-ab"])
+
+        arguments = ["-oxy"]
+        XCTAssertTrue(try option.parse(arguments: &arguments))
+        XCTAssertEqual(option.value, true)
+        XCTAssertEqual(arguments, ["-xy"])
     }
 }
