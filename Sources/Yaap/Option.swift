@@ -63,6 +63,10 @@ public class Option<T: ArgumentType>: CommandProperty {
         if argument == "--\(name)" {
             arguments.removeFirst()
         } else if let shorthand = shorthand, argument.starts(with: "-\(shorthand)") {
+            guard type(of: value) == Bool.self else {
+                throw OptionMissingArgumentError(option: "-\(shorthand)")
+            }
+
             if argument.count == 2 {
                 arguments.removeFirst()
             } else {

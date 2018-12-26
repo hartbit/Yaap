@@ -3,18 +3,18 @@
 import PackageDescription
 
 let package = Package(
-    name: "CLI",
+    name: "Yaap",
     products: [
         .library(
-            name: "CLI",
-            targets: ["CLI"]),
+            name: "Yaap",
+            targets: ["Yaap"]),
     ],
     targets: [
         .target(
-            name: "CLI",
+            name: "Yaap",
             dependencies: []),
         .testTarget(
-            name: "CLITests",
-            dependencies: ["CLI"]),
+            name: "YaapTests",
+            dependencies: ["Yaap"]),
     ]
 )

@@ -1,5 +1,5 @@
 import XCTest
-@testable import CLI
+@testable import Yaap
 
 class OptionTests: XCTestCase {
     func test_initializer() {
@@ -175,7 +175,6 @@ class OptionTests: XCTestCase {
 
     func test_parse_upToNextOptional() throws {
         let option1 = Option<String>(name: "option", shorthand: "o", defaultValue: "something")
-        option1.setup(withLabel: "label")
 
         var arguments = ["--option", "-v"]
         XCTAssertThrowsError(
@@ -183,7 +182,6 @@ class OptionTests: XCTestCase {
             equals: OptionMissingArgumentError(option: "--option"))
 
         let option2 = Option<[String]>(name: "option", shorthand: "o", defaultValue: [])
-        option1.setup(withLabel: "label")
 
         arguments = ["--option", "one", "two", "--other", "three"]
         XCTAssertTrue(try option2.parse(arguments: &arguments))
@@ -192,17 +190,23 @@ class OptionTests: XCTestCase {
     }
 
     func test_parse_multipleFlags() throws {
-        let option = Option<Bool>(name: "option", shorthand: "o")
-        option.setup(withLabel: "label")
+        let option1 = Option<Bool>(name: "option", shorthand: "o")
 
         var arguments = ["-ab"]
-        XCTAssertFalse(try option.parse(arguments: &arguments))
-        XCTAssertEqual(option.value, false)
+        XCTAssertFalse(try option1.parse(arguments: &arguments))
+        XCTAssertEqual(option1.value, false)
         XCTAssertEqual(arguments, ["-ab"])
 
         arguments = ["-oxy"]
-        XCTAssertTrue(try option.parse(arguments: &arguments))
-        XCTAssertEqual(option.value, true)
+        XCTAssertTrue(try option1.parse(arguments: &arguments))
+        XCTAssertEqual(option1.value, true)
         XCTAssertEqual(arguments, ["-xy"])
+
+        let option2 = Option<String>(name: "option", shorthand: "o", defaultValue: "default")
+
+        arguments = ["-oxy"]
+        XCTAssertThrowsError(
+            try option2.parse(arguments: &arguments),
+            equals: OptionMissingArgumentError(option: "-o"))
     }
 }

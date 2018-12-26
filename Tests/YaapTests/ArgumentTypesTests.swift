@@ -1,5 +1,5 @@
 import XCTest
-@testable import CLI
+@testable import Yaap
 
 class ArgumentTypesTests: XCTestCase {
     func test_string_noValue() {

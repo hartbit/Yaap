@@ -1,5 +1,5 @@
 import XCTest
-@testable import CLI
+@testable import Yaap
 
 class GroupCommandTests: XCTestCase {
     func test_generateUsage() {

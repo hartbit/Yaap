@@ -1,3 +1,3 @@
-# CLI.swift
+# Yaap
 
-A description of this package.
+Yaap is Yet Another (Swift) Argument Parser.

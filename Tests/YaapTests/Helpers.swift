@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-import CLI
+import Yaap
 
 extension ArgumentHelp: Equatable {
     public static func == (lhs: ArgumentHelp, rhs: ArgumentHelp) -> Bool {

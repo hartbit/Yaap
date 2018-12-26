@@ -1,5 +1,5 @@
 import XCTest
-@testable import CLI
+@testable import Yaap
 
 class SubCommandTests: XCTestCase {
     func tes_priority() {
