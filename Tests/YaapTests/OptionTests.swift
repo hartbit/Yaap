@@ -153,7 +153,7 @@ class OptionTests: XCTestCase {
         XCTAssertEqual(arguments, [])
 
         arguments = ["-l", "98"]
-        XCTAssertTrue(try option2.parse(arguments: &arguments))
+        XCTAssertFalse(try option2.parse(arguments: &arguments))
         XCTAssertEqual(option2.value, 8)
         XCTAssertEqual(arguments, ["-l", "98"])
     }
