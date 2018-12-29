@@ -2,6 +2,30 @@ import Foundation
 import XCTest
 import Yaap
 
+class DummyCommand: Command {
+    let documentation: String
+
+    init(documentation: String = "") {
+        self.documentation = documentation
+    }
+
+    func run() throws {
+    }
+}
+
+class MockCommand: Command {
+    private(set) var arguments: [String] = []
+
+    func parse(arguments: inout [String]) throws -> Bool {
+        self.arguments = arguments
+        arguments.removeAll()
+        return true
+    }
+
+    func run() throws {
+    }
+}
+
 extension ArgumentHelp: Equatable {
     public static func == (lhs: ArgumentHelp, rhs: ArgumentHelp) -> Bool {
         return lhs.category == rhs.category &&

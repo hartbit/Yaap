@@ -2,8 +2,8 @@ public struct Tool {
     public let name: String
     public let version: String
     public let command: Command
-    public var outputStream: TextOutputStream = FileOutputStream.standardOutput
-    public var errorStream: TextOutputStream = FileOutputStream.standardError
+    internal var outputStream: TextOutputStream = FileOutputStream.standardOutput
+    internal var errorStream: TextOutputStream = FileOutputStream.standardError
 
     public init(name: String, version: String, command: Command) {
         self.name = name
@@ -15,6 +15,5 @@ public struct Tool {
     }
 
     public func parse(arguments: [String]) {
-        
     }
 }

@@ -15,9 +15,9 @@ class SubCommandTests: XCTestCase {
 
     func test_help() {
         let subCommand = SubCommand(commands: [
-            "edit": Command(documentation: "The documentation for edit"),
-            "unedit": Command(documentation: "The documentation for unedit"),
-            "random": Command(documentation: "")
+            "edit": DummyCommand(documentation: "The documentation for edit"),
+            "unedit": DummyCommand(documentation: "The documentation for unedit"),
+            "random": DummyCommand(documentation: "")
         ])
 
         subCommand.setup(withLabel: "label")
@@ -30,9 +30,9 @@ class SubCommandTests: XCTestCase {
 
     func test_parse_noArguments() {
         let subCommand = SubCommand(commands: [
-            "edit": Command(documentation: "The documentation for edit"),
-            "unedit": Command(documentation: "The documentation for unedit"),
-            "random": Command(documentation: "Some random command")
+            "edit": DummyCommand(),
+            "unedit": DummyCommand(),
+            "random": DummyCommand()
         ])
 
         subCommand.setup(withLabel: "label")
@@ -43,9 +43,9 @@ class SubCommandTests: XCTestCase {
 
     func test_parse_invalidValue() {
         let subCommand = SubCommand(commands: [
-            "edit": Command(documentation: "The documentation for edit"),
-            "unedit": Command(documentation: "The documentation for unedit"),
-            "random": Command(documentation: "Some random command")
+            "edit": DummyCommand(),
+            "unedit": DummyCommand(),
+            "random": DummyCommand()
         ])
 
         subCommand.setup(withLabel: "label")
@@ -72,17 +72,7 @@ class SubCommandTests: XCTestCase {
     }
 
     func test_parse_validCommand() throws {
-        class MockCommand: Command {
-            private(set) var arguments: [String] = []
-
-            override func parse(arguments: inout [String]) throws -> Bool {
-                self.arguments = arguments
-                arguments.removeAll()
-                return true
-            }
-        }
-
-        let mockCommand = MockCommand(documentation: "")
+        let mockCommand = MockCommand()
         let subCommand = SubCommand(commands: ["cmd": mockCommand])
 
         subCommand.setup(withLabel: "label")

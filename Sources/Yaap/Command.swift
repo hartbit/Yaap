@@ -1,18 +1,17 @@
 import Foundation
 
-open class Command: ArgumentParser {
-    public let documentation: String
-    public let shouldPrintHelp = Option<Bool>(
-        name: "help",
-        shorthand: "h",
-        defaultValue: false,
-        documentation: "Print command documentation")
+public protocol Command: ArgumentParser {
+    var documentation: String { get }
 
-    public init(documentation: String) {
-        self.documentation = documentation
+    func run() throws
+}
+
+extension Command {
+    public var documentation: String {
+        return ""
     }
 
-    open func generateUsage(prefix: String) -> String {
+    public func generateUsage(prefix: String) -> String {
         let components = sortedProperties()
             .compactMap({ $0.usage })
             .compactConsecutiveSame()
@@ -20,7 +19,7 @@ open class Command: ArgumentParser {
         return ([prefix] + components).joined(separator: " ")
     }
 
-    open func generateHelp(usagePrefix: String) -> String {
+    public func generateHelp(usagePrefix: String) -> String {
         var output: [String] = []
 
         if !documentation.isEmpty {
@@ -70,12 +69,6 @@ open class Command: ArgumentParser {
         }
 
         return true
-    }
-
-    open func run(stdout: inout TextOutputStream, stderr: inout TextOutputStream) throws {
-        if shouldPrintHelp.value {
-            stdout.write(generateHelp(usagePrefix: ""))
-        }
     }
 }
 

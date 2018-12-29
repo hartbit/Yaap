@@ -4,41 +4,41 @@ import XCTest
 class GroupCommandTests: XCTestCase {
     func test_generateUsage() {
         let command = GroupCommand(commands: [
-            "edit": Command(documentation: "The documentation for edit"),
-            "unedit": Command(documentation: "The documentation for unedit"),
-            "random": Command(documentation: "")
+            "edit": DummyCommand(documentation: "The documentation for edit"),
+            "unedit": DummyCommand(documentation: "The documentation for unedit"),
+            "random": DummyCommand(documentation: "")
         ])
 
         XCTAssertEqual(command.generateUsage(prefix: "tool command"), """
-            tool command [options] subcommand
+            tool command subcommand
             """)
     }
 
     func test_generateHelp() {
         let command = GroupCommand(commands: [
-            "edit": Command(documentation: "The documentation for edit"),
-            "unedit": Command(documentation: "The documentation for unedit"),
-            "random": Command(documentation: "")
+            "edit": DummyCommand(documentation: "The documentation for edit"),
+            "unedit": DummyCommand(documentation: "The documentation for unedit"),
+            "random": DummyCommand(documentation: "")
         ], documentation: "This is the group command documentation")
 
         XCTAssertEqual(command.generateHelp(usagePrefix: "tool"), """
             OVERVIEW: This is the group command documentation
 
-            USAGE: tool [options] subcommand
-
-            OPTIONS:
-              --help, -h    Print command documentation [default: false]
+            USAGE: tool subcommand
 
             SUBCOMMANDS:
-              edit          The documentation for edit
-              random        \n\
-              unedit        The documentation for unedit
+              edit      The documentation for edit
+              random    \n\
+              unedit    The documentation for unedit
             """)
     }
 
     func test_parse() throws {
         class SimpleCommand: Command {
             let argument = Argument<String>()
+
+            func run() throws {
+            }
         }
 
         class EditCommand: SimpleCommand {}
@@ -46,9 +46,9 @@ class GroupCommandTests: XCTestCase {
         class RandomCommand: SimpleCommand {}
 
         let command = GroupCommand(commands: [
-            "edit": EditCommand(documentation: "The documentation for edit"),
-            "unedit": UneditCommand(documentation: "The documentation for unedit"),
-            "random": RandomCommand(documentation: "The documentation for random")
+            "edit": EditCommand(),
+            "unedit": UneditCommand(),
+            "random": RandomCommand()
         ])
 
         var arguments = ["edit", "something"]
