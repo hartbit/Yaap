@@ -1,4 +1,6 @@
-public struct Tool {
+import Foundation
+
+public class Tool {
     public let name: String
     public let version: String
     public let command: Command
@@ -12,8 +14,13 @@ public struct Tool {
     }
 
     public func run() {
-    }
-
-    public func parse(arguments: [String]) {
+        do {
+            var arguments = Array(CommandLine.arguments.dropFirst())
+            try command.parse(arguments: &arguments)
+            try command.run()
+        } catch {
+            let description = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            errorStream.write("error: \(description)")
+        }
     }
 }

@@ -30,7 +30,7 @@ public class SubCommand: CommandProperty {
     @discardableResult
     public func parse(arguments: inout [String]) throws -> Bool {
         guard let argument = arguments.first else {
-            throw SubCommandMissingArgumentError()
+            throw SubCommandMissingError()
         }
 
         guard let command = commands[argument] else {
@@ -51,7 +51,7 @@ public class SubCommand: CommandProperty {
     }
 }
 
-public struct SubCommandMissingArgumentError: Error, Equatable {
+public struct SubCommandMissingError: Error, Equatable {
     public var localizedDescription: String {
         return "missing subcommand"
     }

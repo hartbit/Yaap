@@ -1,3 +1,5 @@
+import Foundation
+
 public class Argument<T: ArgumentType>: CommandProperty {
     public private(set) var name: String?
     public let documentation: String?
@@ -38,26 +40,26 @@ public class Argument<T: ArgumentType>: CommandProperty {
             value = try T.init(arguments: &arguments)
             return true
         } catch ParseError.missingArgument {
-            throw MissingArgumentError(argument: name ?? "")
+            throw ArgumentMissingError(argument: name ?? "")
         } catch ParseError.invalidFormat(let value) {
             throw ArgumentInvalidFormatError(argument: name ?? "", value: value)
         }
     }
 }
 
-public struct MissingArgumentError: Error, Equatable {
+public struct ArgumentMissingError: LocalizedError, Equatable {
     public let argument: String
 
-    public var localizedDescription: String {
+    public var errorDescription: String? {
         return "missing argument '\(argument)'"
     }
 }
 
-public struct ArgumentInvalidFormatError: Error, Equatable {
+public struct ArgumentInvalidFormatError: LocalizedError, Equatable {
     public let argument: String
     public let value: String
 
-    public var localizedDescription: String {
+    public var errorDescription: String? {
         return "invalid format '\(value)' for argument '\(argument)'"
     }
 }

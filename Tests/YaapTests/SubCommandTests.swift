@@ -38,7 +38,7 @@ class SubCommandTests: XCTestCase {
         subCommand.setup(withLabel: "label")
 
         var arguments: [String] = []
-        XCTAssertThrowsError(try subCommand.parse(arguments: &arguments), equals: SubCommandMissingArgumentError())
+        XCTAssertThrowsError(try subCommand.parse(arguments: &arguments), equals: SubCommandMissingError())
     }
 
     func test_parse_invalidValue() {

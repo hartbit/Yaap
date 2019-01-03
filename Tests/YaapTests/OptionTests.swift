@@ -107,12 +107,17 @@ class OptionTests: XCTestCase {
         var arguments = ["--option"]
         XCTAssertThrowsError(
             try option.parse(arguments: &arguments),
-            equals: OptionMissingArgumentError(option: "--option"))
+            equals: OptionMissingValueError(option: "--option"))
 
         arguments = ["-o"]
         XCTAssertThrowsError(
             try option.parse(arguments: &arguments),
-            equals: OptionMissingArgumentError(option: "-o"))
+            equals: OptionMissingValueError(option: "-o"))
+
+        let error = OptionMissingValueError(option: "--option")
+        XCTAssertEqual(error.errorDescription, """
+            option '--option' missing a value; provide one with '--option <value>' or '--option=<value>'
+            """)
     }
 
     func test_parse_invalidValue() throws {
@@ -128,6 +133,9 @@ class OptionTests: XCTestCase {
         XCTAssertThrowsError(
             try option.parse(arguments: &arguments),
             equals: OptionInvalidFormatError(option: "-o", value: "2.4"))
+
+        let error = OptionInvalidFormatError(option: "--option", value: "invalid-value")
+        XCTAssertEqual(error.errorDescription, "invalid format 'invalid-value' for option '--option'")
     }
 
     func test_parse_validValue() throws {
@@ -179,7 +187,7 @@ class OptionTests: XCTestCase {
         var arguments = ["--option", "-v"]
         XCTAssertThrowsError(
             try option1.parse(arguments: &arguments),
-            equals: OptionMissingArgumentError(option: "--option"))
+            equals: OptionMissingValueError(option: "--option"))
 
         let option2 = Option<[String]>(name: "option", shorthand: "o", defaultValue: [])
 
@@ -207,6 +215,6 @@ class OptionTests: XCTestCase {
         arguments = ["-oxy"]
         XCTAssertThrowsError(
             try option2.parse(arguments: &arguments),
-            equals: OptionMissingArgumentError(option: "-o"))
+            equals: OptionMissingValueError(option: "-o"))
     }
 }

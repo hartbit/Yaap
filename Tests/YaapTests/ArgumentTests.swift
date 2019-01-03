@@ -61,13 +61,16 @@ class ArgumentTests: XCTestCase {
         argument1.setup(withLabel: "label")
         XCTAssertThrowsError(
             try argument1.parse(arguments: &arguments),
-            equals: MissingArgumentError(argument: "label"))
+            equals: ArgumentMissingError(argument: "label"))
 
         let argument2 = Argument<Int>(name: "argument-name", documentation: nil)
         argument2.setup(withLabel: "label")
         XCTAssertThrowsError(
             try argument2.parse(arguments: &arguments),
-            equals: MissingArgumentError(argument: "argument-name"))
+            equals: ArgumentMissingError(argument: "argument-name"))
+
+        let error = ArgumentMissingError(argument: "argument-name")
+        XCTAssertEqual(error.errorDescription, "missing argument 'argument-name'")
     }
 
     func test_parse_invalidValue() {
@@ -78,12 +81,15 @@ class ArgumentTests: XCTestCase {
             try argument1.parse(arguments: &arguments),
             equals: ArgumentInvalidFormatError(argument: "label", value: "2.5"))
 
-        let argument2 = Argument<Int>(name: "agument-name", documentation: nil)
+        let argument2 = Argument<Int>(name: "argument-name", documentation: nil)
         argument2.setup(withLabel: "label")
         arguments = ["two"]
         XCTAssertThrowsError(
             try argument2.parse(arguments: &arguments),
-            equals: ArgumentInvalidFormatError(argument: "agument-name", value: "two"))
+            equals: ArgumentInvalidFormatError(argument: "argument-name", value: "two"))
+
+        let error = ArgumentInvalidFormatError(argument: "argument-name", value: "invalid-value")
+        XCTAssertEqual(error.errorDescription, "invalid format 'invalid-value' for argument 'argument-name'")
     }
 
     func test_parse_validValue() throws {

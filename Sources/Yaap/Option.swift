@@ -1,3 +1,5 @@
+import Foundation
+
 public class Option<T: ArgumentType>: CommandProperty {
     public private(set) var name: String?
     public let shorthand: Character?
@@ -67,7 +69,7 @@ public class Option<T: ArgumentType>: CommandProperty {
                 arguments.removeFirst()
             } else {
                 guard type(of: value) == Bool.self else {
-                    throw OptionMissingArgumentError(option: "-\(shorthand)")
+                    throw OptionMissingValueError(option: "-\(shorthand)")
                 }
 
                 arguments[0] = "-" + argument.dropFirst(2)
@@ -87,7 +89,7 @@ public class Option<T: ArgumentType>: CommandProperty {
                 value = try T.init(arguments: &innerArguments)
                 arguments = innerArguments + arguments[endIndex..<arguments.endIndex]
             } catch ParseError.missingArgument {
-                throw OptionMissingArgumentError(option: argument)
+                throw OptionMissingValueError(option: argument)
             } catch ParseError.invalidFormat(let value) {
                 throw OptionInvalidFormatError(option: argument, value: value)
             }
@@ -103,23 +105,21 @@ extension Option where T == Bool {
     }
 }
 
-public struct OptionMissingArgumentError: Error, Equatable {
+public struct OptionMissingValueError: LocalizedError, Equatable {
     public let option: String
 
-    public var localizedDescription: String {
+    public var errorDescription: String? {
         return """
             option '\(option)' missing a value; provide one with '\(option) <value>' or '\(option)=<value>'
             """
     }
 }
 
-public struct OptionInvalidFormatError: Error, Equatable {
+public struct OptionInvalidFormatError: LocalizedError, Equatable {
     public let option: String
     public let value: String
 
-    public var localizedDescription: String {
-        return """
-            invalid format '\(value)' for option '\(option)'
-            """
+    public var errorDescription: String? {
+        return "invalid format '\(value)' for option '\(option)'"
     }
 }
