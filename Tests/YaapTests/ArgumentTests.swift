@@ -33,25 +33,29 @@ class ArgumentTests: XCTestCase {
     func test_help() {
         let argument1 = Argument<Int>(name: nil, documentation: nil)
         argument1.setup(withLabel: "label")
-        XCTAssertEqual(argument1.help, [])
+        XCTAssertEqual(argument1.info, [])
 
         let argument2 = Argument<Int>(name: "custom-name", documentation: nil)
         argument2.setup(withLabel: "label")
-        XCTAssertEqual(argument2.help, [])
+        XCTAssertEqual(argument2.info, [])
 
         let argument3 = Argument<Int>(name: nil, documentation: "Lengthy documentation")
         argument3.setup(withLabel: "label")
-        XCTAssertEqual(argument3.help, [ArgumentHelp(
-            category: "ARGUMENTS",
-            label: "label",
-            description: "Lengthy documentation")])
+        XCTAssertEqual(argument3.info, [
+            PropertyInfo(
+                category: "ARGUMENTS",
+                label: "label",
+                documentation: "Lengthy documentation")
+        ])
 
         let argument4 = Argument<Int>(name: "custom-name", documentation: "Lengthy documentation")
         argument4.setup(withLabel: "label")
-        XCTAssertEqual(argument4.help, [ArgumentHelp(
-            category: "ARGUMENTS",
-            label: "custom-name",
-            description: "Lengthy documentation")])
+        XCTAssertEqual(argument4.info, [
+            PropertyInfo(
+                category: "ARGUMENTS",
+                label: "custom-name",
+                documentation: "Lengthy documentation")
+        ])
     }
 
     func test_parse_noArguments() {

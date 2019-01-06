@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:4.2
 
 import PackageDescription
 
@@ -13,8 +13,12 @@ let package = Package(
         .target(
             name: "Yaap",
             dependencies: []),
+        .target(
+            name: "YaapExample",
+            dependencies: ["Yaap"]),
         .testTarget(
             name: "YaapTests",
             dependencies: ["Yaap"]),
-    ]
+    ],
+    swiftLanguageVersions: [.v4_2]
 )

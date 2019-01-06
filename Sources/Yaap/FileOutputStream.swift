@@ -11,8 +11,3 @@ internal class FileOutputStream: TextOutputStream {
         handle.write(string.data(using: .utf8)!)
     }
 }
-
-extension FileOutputStream {
-    internal static let standardOutput = FileOutputStream(handle: .standardOutput)
-    internal static let standardError = FileOutputStream(handle: .standardError)
-}

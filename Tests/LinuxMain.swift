@@ -1,8 +1,8 @@
 import XCTest
 
-import CommendableTests
+import YaapTests
 
 var tests = [XCTestCaseEntry]()
-tests += CommendableTests.__allTests()
+tests += YaapTests.__allTests()
 
 XCTMain(tests)

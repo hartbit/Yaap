@@ -8,14 +8,14 @@ public class SubCommand: CommandProperty {
         return label
     }
 
-    public var help: [ArgumentHelp] {
+    public var info: [PropertyInfo] {
         return commands
             .sorted(by: { $0.key < $1.key })
             .map({ (label, command) in
-                ArgumentHelp(
+                PropertyInfo(
                     category: "SUBCOMMANDS",
                     label: label,
-                    description: command.documentation)
+                    documentation: command.documentation)
             })
     }
 
@@ -48,6 +48,9 @@ public class SubCommand: CommandProperty {
         arguments.removeFirst()
         try command.parse(arguments: &arguments)
         return true
+    }
+
+    public func run() throws {
     }
 }
 

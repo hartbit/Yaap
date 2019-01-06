@@ -1,7 +1,7 @@
 import XCTest
 @testable import Yaap
 
-class ArgumentTypesTests: XCTestCase {
+class ArgumentTypeTests: XCTestCase {
     func test_string_noValue() {
         var arguments: [String] = []
         XCTAssertThrowsError(try String(arguments: &arguments), equals: ParseError.missingArgument)

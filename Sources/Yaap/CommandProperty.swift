@@ -1,23 +1,24 @@
-public struct ArgumentHelp {
-    public let category: String
-    public let label: String
-    public let description: String
-}
-
 public protocol ArgumentParser: class {
     @discardableResult
     func parse(arguments: inout [String]) throws -> Bool
+    func run() throws
+}
+
+public struct PropertyInfo: Equatable {
+    public let category: String
+    public let label: String
+    public let documentation: String
 }
 
 public protocol CommandProperty: ArgumentParser {
     var priority: Double { get }
     var usage: String? { get }
-    var help: [ArgumentHelp] { get }
+    var info: [PropertyInfo] { get }
 
     func setup(withLabel label: String)
 }
 
-enum ParseError: Error, Equatable {
+public enum ParseError: Error, Equatable {
     case missingArgument
     case invalidFormat(String)
 }

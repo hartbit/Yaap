@@ -1,6 +1,60 @@
 import XCTest
 @testable import Yaap
 
+struct DummyError: Error {
+}
+
+struct DummyLocalizedError: LocalizedError {
+    var errorDescription: String? {
+        return "dummy-localized-error"
+    }
+}
+
+class ErrorCommand: Command {
+    private let parseError: Error?
+    private let runError: Error?
+
+    init(parseError: Error? = nil, runError: Error? = nil) {
+        self.parseError = parseError
+        self.runError = runError
+    }
+
+    @discardableResult
+    public func parse(arguments: inout [String]) throws -> Bool {
+        if let parseError = parseError {
+            throw parseError
+        }
+
+        return true
+    }
+
+    func run() throws {
+        if let runError = runError {
+            throw runError
+        }
+    }
+}
+
+func XCTAssertExit(
+    _ expectedCode: Int32,
+    _ closure: @autoclosure () -> Void,
+    file: StaticString = #file,
+    line: UInt = #line
+) {
+    var hasExited = false
+    let previousExit = exitProcess
+    exitProcess = { (code: Int32) -> Void in
+        XCTAssertEqual(code, expectedCode, file: file, line: line)
+        hasExited = true
+    }
+    defer {
+        exitProcess = previousExit
+    }
+
+    closure()
+    XCTAssert(hasExited, file: file, line: line)
+}
+
 class CommandTests: XCTestCase {
     func test_generateUsage_minimal() {
         XCTAssertEqual(DummyCommand().generateUsage(prefix: "tool command"), """
@@ -186,5 +240,51 @@ class CommandTests: XCTestCase {
         XCTAssertEqual(command.times.value, 4)
         XCTAssertEqual(command.verbose.value, false)
         XCTAssertEqual(command.extra.value, 1)
+    }
+
+    func testParseAndRunError() {
+        var command = ErrorCommand(parseError: DummyError())
+        var outputStream: TextOutputStream = ""
+        var errorStream: TextOutputStream = ""
+        XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
+
+        XCTAssertEqual(outputStream as! String, "")
+        XCTAssertEqual(errorStream as! String, """
+            \u{001B}[31merror:\u{001B}[0m The operation couldn’t be completed. (YaapTests.DummyError error 1.)
+
+            """)
+
+        command = ErrorCommand(parseError: DummyLocalizedError())
+        outputStream = ""
+        errorStream = ""
+        XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
+
+        XCTAssertEqual(outputStream as! String, "")
+        XCTAssertEqual(errorStream as! String, """
+            \u{001B}[31merror:\u{001B}[0m dummy-localized-error
+
+            """)
+
+        command = ErrorCommand(runError: DummyError())
+        outputStream = ""
+        errorStream = ""
+        XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
+
+        XCTAssertEqual(outputStream as! String, "")
+        XCTAssertEqual(errorStream as! String, """
+            \u{001B}[31merror:\u{001B}[0m The operation couldn’t be completed. (YaapTests.DummyError error 1.)
+
+            """)
+
+        command = ErrorCommand(runError: DummyLocalizedError())
+        outputStream = ""
+        errorStream = ""
+        XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
+
+        XCTAssertEqual(outputStream as! String, "")
+        XCTAssertEqual(errorStream as! String, """
+            \u{001B}[31merror:\u{001B}[0m dummy-localized-error
+
+            """)
     }
 }

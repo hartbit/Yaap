@@ -26,14 +26,6 @@ class MockCommand: Command {
     }
 }
 
-extension ArgumentHelp: Equatable {
-    public static func == (lhs: ArgumentHelp, rhs: ArgumentHelp) -> Bool {
-        return lhs.category == rhs.category &&
-            lhs.label == rhs.label &&
-            lhs.description == rhs.description
-    }
-}
-
 func XCTAssertThrowsError<T, E: Error & Equatable>(
     _ expression: @autoclosure () throws -> T,
     equals expectedError: E,

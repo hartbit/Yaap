@@ -41,24 +41,30 @@ class OptionTests: XCTestCase {
     func test_help() {
         let option1 = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
         option1.setup(withLabel: "label")
-        XCTAssertEqual(option1.help, [ArgumentHelp(
-            category: "OPTIONS",
-            label: "--label",
-            description: "[default: 42]")])
+        XCTAssertEqual(option1.info, [
+            PropertyInfo(
+                category: "OPTIONS",
+                label: "--label",
+                documentation: "[default: 42]")
+        ])
 
         let option2 = Option<Int>(name: "option", shorthand: nil, defaultValue: 0)
         option2.setup(withLabel: "label")
-        XCTAssertEqual(option2.help, [ArgumentHelp(
-            category: "OPTIONS",
-            label: "--option",
-            description: "[default: 0]")])
+        XCTAssertEqual(option2.info, [
+            PropertyInfo(
+                category: "OPTIONS",
+                label: "--option",
+                documentation: "[default: 0]")
+        ])
 
         let option3 = Option<String>(name: "output", shorthand: "o", defaultValue: "./")
         option3.setup(withLabel: "label")
-        XCTAssertEqual(option3.help, [ArgumentHelp(
-            category: "OPTIONS",
-            label: "--output, -o",
-            description: "[default: ./]")])
+        XCTAssertEqual(option3.info, [
+            PropertyInfo(
+                category: "OPTIONS",
+                label: "--output, -o",
+                documentation: "[default: ./]")
+        ])
 
         let option4 = Option<Bool>(
             name: "verbose",
@@ -66,10 +72,12 @@ class OptionTests: XCTestCase {
             defaultValue: true,
             documentation: "Awesome documentation")
         option4.setup(withLabel: "label")
-        XCTAssertEqual(option4.help, [ArgumentHelp(
-            category: "OPTIONS",
-            label: "--verbose",
-            description: "Awesome documentation [default: true]")])
+        XCTAssertEqual(option4.info, [
+            PropertyInfo(
+                category: "OPTIONS",
+                label: "--verbose",
+                documentation: "Awesome documentation [default: true]")
+        ])
     }
 
     func test_parse_noArguments() throws {

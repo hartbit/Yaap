@@ -10,13 +10,13 @@ public class Argument<T: ArgumentType>: CommandProperty {
         return name.map({ "<\($0)>" })
     }
 
-    public var help: [ArgumentHelp] {
+    public var info: [PropertyInfo] {
         if let name = name, let documentation = documentation {
             return [
-                ArgumentHelp(
+                PropertyInfo(
                     category: "ARGUMENTS",
                     label: name,
-                    description: documentation)
+                    documentation: documentation)
             ]
         } else {
             return []
@@ -43,6 +43,12 @@ public class Argument<T: ArgumentType>: CommandProperty {
             throw ArgumentMissingError(argument: name ?? "")
         } catch ParseError.invalidFormat(let value) {
             throw ArgumentInvalidFormatError(argument: name ?? "", value: value)
+        }
+    }
+
+    public func run() throws {
+        guard value != nil else {
+            throw ArgumentMissingError(argument: name ?? "")
         }
     }
 }

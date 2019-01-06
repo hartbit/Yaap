@@ -21,10 +21,10 @@ class SubCommandTests: XCTestCase {
         ])
 
         subCommand.setup(withLabel: "label")
-        XCTAssertEqual(subCommand.help, [
-            ArgumentHelp(category: "SUBCOMMANDS", label: "edit", description: "The documentation for edit"),
-            ArgumentHelp(category: "SUBCOMMANDS", label: "random", description: ""),
-            ArgumentHelp(category: "SUBCOMMANDS", label: "unedit", description: "The documentation for unedit"),
+        XCTAssertEqual(subCommand.info, [
+            PropertyInfo(category: "SUBCOMMANDS", label: "edit", documentation: "The documentation for edit"),
+            PropertyInfo(category: "SUBCOMMANDS", label: "random", documentation: ""),
+            PropertyInfo(category: "SUBCOMMANDS", label: "unedit", documentation: "The documentation for unedit"),
         ])
     }
 

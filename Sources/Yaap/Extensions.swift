@@ -1,7 +1,7 @@
 import Foundation
 
 extension Collection where Element: Comparable {
-    func compactConsecutiveSame() -> [Element] {
+    internal func compactConsecutiveSame() -> [Element] {
         var newArray: [Element] = []
         newArray.reserveCapacity(count)
 
@@ -17,7 +17,7 @@ extension Collection where Element: Comparable {
 
 extension StringProtocol {
     /// Converted from psuedocode at https://en.wikipedia.org/wiki/Levenshtein_distance
-    func levenshteinDistance<T: StringProtocol>(to other: T) -> Int {
+    internal func levenshteinDistance<T: StringProtocol>(to other: T) -> Int {
         guard !isEmpty else { return other.count }
         guard !other.isEmpty else { return count }
 

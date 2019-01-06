@@ -12,7 +12,7 @@ public class Option<T: ArgumentType>: CommandProperty {
         return "[options]"
     }
 
-    public var help: [ArgumentHelp] {
+    public var info: [PropertyInfo] {
         guard let name = name else { return [] }
 
         var label = "--\(name)"
@@ -30,10 +30,10 @@ public class Option<T: ArgumentType>: CommandProperty {
         components.append("[default: \(defaultValue.description)]")
 
         return [
-            ArgumentHelp(
+            PropertyInfo(
                 category: "OPTIONS",
                 label: label,
-                description: components.joined(separator: " "))
+                documentation: components.joined(separator: " "))
         ]
     }
 
@@ -96,6 +96,9 @@ public class Option<T: ArgumentType>: CommandProperty {
         }
 
         return true
+    }
+
+    public func run() throws {
     }
 }
 
