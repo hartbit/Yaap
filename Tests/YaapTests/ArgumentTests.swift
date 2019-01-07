@@ -104,4 +104,15 @@ class ArgumentTests: XCTestCase {
         XCTAssertEqual(argument.value, 5)
         XCTAssertEqual(arguments, ["2", "whatever"])
     }
+
+    func test_parse_option() throws {
+        let argument = Argument<String>(name: "argument", documentation: nil)
+        var arguments = ["--option"]
+        XCTAssertFalse(try argument.parse(arguments: &arguments))
+        XCTAssertEqual(arguments, ["--option"])
+
+        arguments = ["-o"]
+        XCTAssertFalse(try argument.parse(arguments: &arguments))
+        XCTAssertEqual(arguments, ["-o"])
+    }
 }

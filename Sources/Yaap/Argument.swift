@@ -36,6 +36,12 @@ public class Argument<T: ArgumentType>: CommandProperty {
 
     @discardableResult
     public func parse(arguments: inout [String]) throws -> Bool {
+        if let firstArgument = arguments.first {
+            guard !firstArgument.starts(with: "-") else {
+                return false
+            }
+        }
+
         do {
             value = try T.init(arguments: &arguments)
             return true
