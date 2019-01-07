@@ -136,10 +136,10 @@ fileprivate extension Command {
     }
 }
 
-public struct CommandUnexpectedArgumentError: Error, Equatable {
+public struct CommandUnexpectedArgumentError: LocalizedError, Equatable {
     public let argument: String
 
-    public var localizedDescription: String {
+    public var errorDescription: String? {
         return "unexpected argument '\(argument)'"
     }
 }

@@ -242,6 +242,25 @@ class CommandTests: XCTestCase {
         XCTAssertEqual(command.extra.value, 1)
     }
 
+    func test_parse_unexpectedArgument() {
+        class TestCommand: Command {
+            func run() throws {
+            }
+        }
+
+        let command = TestCommand()
+        var arguments = ["something"]
+        XCTAssertThrowsError(try command.parse(arguments: &arguments), "", { error in
+            guard let expectedError = error as? CommandUnexpectedArgumentError else {
+                XCTFail("incorrect error")
+                return
+            }
+
+            XCTAssertEqual(expectedError, CommandUnexpectedArgumentError(argument: "something"))
+            XCTAssertEqual(expectedError.errorDescription, "unexpected argument 'something'")
+        })
+    }
+
     func testParseAndRunError() {
         var command = ErrorCommand(parseError: DummyError())
         var outputStream: TextOutputStream = ""
