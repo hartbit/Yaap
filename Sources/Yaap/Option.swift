@@ -98,7 +98,11 @@ public class Option<T: ArgumentType>: CommandProperty {
         return true
     }
 
-    public func run() throws {
+    public func validate(
+        in commands: [Command],
+        outputStream: inout TextOutputStream,
+        errorStream: inout TextOutputStream
+    ) throws {
     }
 }
 

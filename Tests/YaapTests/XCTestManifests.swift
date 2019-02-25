@@ -6,6 +6,7 @@ extension ArgumentTests {
         ("test_initializer", test_initializer),
         ("test_parse_invalidValue", test_parse_invalidValue),
         ("test_parse_noArguments", test_parse_noArguments),
+        ("test_parse_option", test_parse_option),
         ("test_parse_validValue", test_parse_validValue),
         ("test_priority", test_priority),
         ("test_usage", test_usage),
@@ -33,6 +34,20 @@ extension ArgumentTypeTests {
 
 extension CommandTests {
     static let __allTests = [
+        ("test_parse_unexpectedArgument", test_parse_unexpectedArgument),
+        ("test_parse", test_parse),
+        ("testParseAndRunError", testParseAndRunError),
+    ]
+}
+
+extension ExtensionsTests {
+    static let __allTests = [
+        ("test_levenshteinDistance", test_levenshteinDistance),
+    ]
+}
+
+extension HelpTests {
+    static let __allTests = [
         ("test_generateHelp_argumentsWithDocumentation", test_generateHelp_argumentsWithDocumentation),
         ("test_generateHelp_argumentsWithoutDocumentation", test_generateHelp_argumentsWithoutDocumentation),
         ("test_generateHelp_minimal", test_generateHelp_minimal),
@@ -43,21 +58,6 @@ extension CommandTests {
         ("test_generateUsage_minimal", test_generateUsage_minimal),
         ("test_generateUsage_parameters", test_generateUsage_parameters),
         ("test_generateUsage_subCommand", test_generateUsage_subCommand),
-        ("test_parse", test_parse),
-    ]
-}
-
-extension ExtensionsTests {
-    static let __allTests = [
-        ("test_levenshteinDistance", test_levenshteinDistance),
-    ]
-}
-
-extension GroupCommandTests {
-    static let __allTests = [
-        ("test_generateHelp", test_generateHelp),
-        ("test_generateUsage", test_generateUsage),
-        ("test_parse", test_parse),
     ]
 }
 
@@ -84,6 +84,7 @@ extension SubCommandTests {
         ("test_parse_invalidValue", test_parse_invalidValue),
         ("test_parse_noArguments", test_parse_noArguments),
         ("test_parse_validCommand", test_parse_validCommand),
+        ("test_priority", test_priority),
         ("test_usage", test_usage),
     ]
 }
@@ -95,10 +96,9 @@ public func __allTests() -> [XCTestCaseEntry] {
         testCase(ArgumentTypeTests.__allTests),
         testCase(CommandTests.__allTests),
         testCase(ExtensionsTests.__allTests),
-        testCase(GroupCommandTests.__allTests),
+        testCase(HelpTests.__allTests),
         testCase(OptionTests.__allTests),
         testCase(SubCommandTests.__allTests),
-        testCase(ToolTests.__allTests),
     ]
 }
 #endif

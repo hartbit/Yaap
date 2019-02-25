@@ -2,22 +2,22 @@ import XCTest
 @testable import Yaap
 
 class SubCommandTests: XCTestCase {
-    func tes_priority() {
-        let subCommand = SubCommand(commands: [:])
+    func test_priority() {
+        let subCommand = SubCommand(commands: [])
         XCTAssertEqual(subCommand.priority, 0.25)
     }
 
     func test_usage() {
-        let subCommand = SubCommand(commands: [:])
+        let subCommand = SubCommand(commands: [])
         subCommand.setup(withLabel: "label")
         XCTAssertEqual(subCommand.usage, "label")
     }
 
     func test_help() {
         let subCommand = SubCommand(commands: [
-            "edit": DummyCommand(documentation: "The documentation for edit"),
-            "unedit": DummyCommand(documentation: "The documentation for unedit"),
-            "random": DummyCommand(documentation: "")
+            DummyCommand(name: "edit", documentation: "The documentation for edit"),
+            DummyCommand(name: "unedit", documentation: "The documentation for unedit"),
+            DummyCommand(name: "random", documentation: "")
         ])
 
         subCommand.setup(withLabel: "label")
@@ -30,9 +30,9 @@ class SubCommandTests: XCTestCase {
 
     func test_parse_noArguments() {
         let subCommand = SubCommand(commands: [
-            "edit": DummyCommand(),
-            "unedit": DummyCommand(),
-            "random": DummyCommand()
+            DummyCommand(name: "edit"),
+            DummyCommand(name: "unedit"),
+            DummyCommand(name: "random")
         ])
 
         subCommand.setup(withLabel: "label")
@@ -43,9 +43,9 @@ class SubCommandTests: XCTestCase {
 
     func test_parse_invalidValue() {
         let subCommand = SubCommand(commands: [
-            "edit": DummyCommand(),
-            "unedit": DummyCommand(),
-            "random": DummyCommand()
+            DummyCommand(name: "edit"),
+            DummyCommand(name: "unedit"),
+            DummyCommand(name: "random")
         ])
 
         subCommand.setup(withLabel: "label")
@@ -73,11 +73,11 @@ class SubCommandTests: XCTestCase {
 
     func test_parse_validCommand() throws {
         let mockCommand = MockCommand()
-        let subCommand = SubCommand(commands: ["cmd": mockCommand])
+        let subCommand = SubCommand(commands: [mockCommand])
 
         subCommand.setup(withLabel: "label")
 
-        var arguments = ["cmd", "arg1", "arg2"]
+        var arguments = ["mock", "arg1", "arg2"]
         try subCommand.parse(arguments: &arguments)
         XCTAssert(subCommand.value === mockCommand)
         XCTAssertEqual(mockCommand.arguments, ["arg1", "arg2"])

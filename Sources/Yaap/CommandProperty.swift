@@ -1,7 +1,6 @@
 public protocol ArgumentParser: class {
     @discardableResult
     func parse(arguments: inout [String]) throws -> Bool
-    func run() throws
 }
 
 public struct PropertyInfo: Equatable {
@@ -16,6 +15,11 @@ public protocol CommandProperty: ArgumentParser {
     var info: [PropertyInfo] { get }
 
     func setup(withLabel label: String)
+    func validate(
+        in commands: [Command],
+        outputStream: inout TextOutputStream,
+        errorStream: inout TextOutputStream
+    ) throws
 }
 
 public enum ParseError: Error, Equatable {

@@ -10,7 +10,10 @@ internal var exitProcess: (Int32) -> Void = { code in
 }
 
 public protocol Command: ArgumentParser {
+    var name: String { get }
     var documentation: String { get }
+
+    func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws
 }
 
 public extension Command {
@@ -53,59 +56,27 @@ public extension Command {
         do {
             var arguments = arguments
             try parse(arguments: &arguments)
-
-            for property in sortedProperties() {
-                try property.run()
-            }
-
-            try run()
+            try validate(in: [self], outputStream: &outputStream, errorStream: &errorStream)
+            try run(outputStream: &outputStream, errorStream: &errorStream)
         } catch {
             let description = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             errorStream.write("\u{001B}[31merror:\u{001B}[0m \(description)\n")
             exitProcess(128)
         }
     }
+
+    func validate(
+        in commands: [Command],
+        outputStream: inout TextOutputStream,
+        errorStream: inout TextOutputStream
+    ) throws {
+        for property in sortedProperties() {
+            try property.validate(in: commands, outputStream: &outputStream, errorStream: &errorStream)
+        }
+    }
 }
 
 internal extension Command {
-    func generateUsage(prefix: String) -> String {
-        let components = sortedProperties()
-            .compactMap({ $0.usage })
-            .compactConsecutiveSame()
-
-        return ([prefix] + components).joined(separator: " ")
-    }
-
-    func generateHelp(usagePrefix: String) -> String {
-        var output: [String] = []
-
-        if !documentation.isEmpty {
-            output.append("OVERVIEW: \(documentation)")
-        }
-
-        output.append("USAGE: \(generateUsage(prefix: usagePrefix))")
-
-        let propertyInfo = sortedProperties().flatMap({ $0.info })
-        let maxLabelWidth = propertyInfo.lazy.map({ $0.label.count }).max() ?? 0
-        let helpsByCategory = Dictionary(grouping: propertyInfo, by: { $0.category })
-
-        for category in helpsByCategory.keys.sorted() {
-            var lines = ["\(category):"]
-            let sortedHelps = helpsByCategory[category]!.sorted(by: { $0.label < $1.label })
-
-            for help in sortedHelps {
-                let padding = String(repeating: " ", count: maxLabelWidth - help.label.count)
-                lines.append("  \(help.label)\(padding)    \(help.documentation)")
-            }
-
-            output.append(lines.joined(separator: "\n"))
-        }
-
-        return output.joined(separator: "\n\n")
-    }
-}
-
-fileprivate extension Command {
     func sortedProperties() -> [CommandProperty] {
         let mirrors = sequence(first: Mirror(reflecting: self), next: { $0.superclassMirror })
         let children = mirrors.lazy.flatMap({ $0.children })

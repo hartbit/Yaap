@@ -1,6 +1,6 @@
 public class SubCommand: CommandProperty {
     public let priority: Double = 0.25
-    public let commands: [String: Command]
+    public let commands: [Command]
     public private(set) var value: Command?
     private var label: String?
 
@@ -10,16 +10,16 @@ public class SubCommand: CommandProperty {
 
     public var info: [PropertyInfo] {
         return commands
-            .sorted(by: { $0.key < $1.key })
-            .map({ (label, command) in
+            .sorted(by: { $0.name < $1.name })
+            .map({ command in
                 PropertyInfo(
                     category: "SUBCOMMANDS",
-                    label: label,
+                    label: command.name,
                     documentation: command.documentation)
             })
     }
 
-    public init(commands: [String: Command]) {
+    public init(commands: [Command]) {
         self.commands = commands
     }
 
@@ -33,10 +33,10 @@ public class SubCommand: CommandProperty {
             throw SubCommandMissingError()
         }
 
-        guard let command = commands[argument] else {
+        guard let command = commands.first(where: { $0.name == argument }) else {
             let suggestion = commands
                 .lazy
-                .map({ (key: $0.key, distance: $0.key.levenshteinDistance(to: argument)) })
+                .map({ (key: $0.name, distance: $0.name.levenshteinDistance(to: argument)) })
                 .filter({ $0.distance < 3 })
                 .min(by: { $0.distance < $1.distance })
                 .map({ $0.key })
@@ -50,7 +50,14 @@ public class SubCommand: CommandProperty {
         return true
     }
 
-    public func run() throws {
+    public func validate(
+        in commands: [Command],
+        outputStream: inout TextOutputStream,
+        errorStream: inout TextOutputStream
+    ) throws {
+        if let command = value {
+            try command.validate(in: commands + [command], outputStream: &outputStream, errorStream: &errorStream)
+        }
     }
 }
 

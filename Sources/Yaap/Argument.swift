@@ -52,7 +52,11 @@ public class Argument<T: ArgumentType>: CommandProperty {
         }
     }
 
-    public func run() throws {
+    public func validate(
+        in commands: [Command],
+        outputStream: inout TextOutputStream,
+        errorStream: inout TextOutputStream
+    ) throws {
         guard value != nil else {
             throw ArgumentMissingError(argument: name ?? "")
         }

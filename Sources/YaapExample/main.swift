@@ -2,10 +2,12 @@ import Yaap
 import Foundation
 
 class RandomCommand: Command {
+    let name = "rand"
     let maximum = Argument<Int>(documentation: "Exlcusive maximum value")
     let minimum = Option<Int>(shorthand: "m", defaultValue: 0, documentation: "Inclusive minimum value")
+    let help = Help()
 
-    func run() throws {
+    func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
         guard maximum.value > minimum.value else {
             throw InvalidIntervalError(minimum: minimum.value, maximum: maximum.value)
         }
