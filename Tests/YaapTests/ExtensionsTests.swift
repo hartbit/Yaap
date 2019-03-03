@@ -3,7 +3,7 @@ import XCTest
 
 class ExtensionsTests: XCTestCase {
     // Tests come the following blog: https://oldfashionedsoftware.com/tag/levenshtein-distance/
-    func test_levenshteinDistance() {
+    func testLevenshteinDistance() {
         // should work on empty strings
         XCTAssertEqual(levenshteinDistance(from: "", to: ""), 0)
         XCTAssertEqual(levenshteinDistance(from: "a", to: ""), 1)

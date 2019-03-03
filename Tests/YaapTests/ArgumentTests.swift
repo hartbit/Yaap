@@ -2,7 +2,7 @@ import XCTest
 @testable import Yaap
 
 class ArgumentTests: XCTestCase {
-    func test_initializer() {
+    func testInitializer() {
         let argument1 = Argument<Int>(name: nil, documentation: nil)
         XCTAssertNil(argument1.name)
         XCTAssertNil(argument1.documentation)
@@ -12,7 +12,7 @@ class ArgumentTests: XCTestCase {
         XCTAssertEqual(argument2.documentation, "Lengthy documentation")
     }
 
-    func test_priority() {
+    func testPriority() {
         let argument1 = Argument<Int>(name: nil, documentation: nil)
         XCTAssertEqual(argument1.priority, 0.25)
 
@@ -20,7 +20,7 @@ class ArgumentTests: XCTestCase {
         XCTAssertEqual(argument2.priority, 0.25)
     }
 
-    func test_usage() {
+    func testUsage() {
         let argument1 = Argument<Int>(name: nil, documentation: nil)
         argument1.setup(withLabel: "label")
         XCTAssertEqual(argument1.usage, "<label>")
@@ -30,7 +30,7 @@ class ArgumentTests: XCTestCase {
         XCTAssertEqual(argument2.usage, "<custom-name>")
     }
 
-    func test_help() {
+    func testHelp() {
         let argument1 = Argument<Int>(name: nil, documentation: nil)
         argument1.setup(withLabel: "label")
         XCTAssertEqual(argument1.info, [])
@@ -58,7 +58,7 @@ class ArgumentTests: XCTestCase {
         ])
     }
 
-    func test_parse_noArguments() {
+    func testParseNoArguments() {
         var arguments: [String] = []
 
         let argument1 = Argument<Int>(name: nil, documentation: nil)
@@ -77,7 +77,7 @@ class ArgumentTests: XCTestCase {
         XCTAssertEqual(error.errorDescription, "missing argument 'argument-name'")
     }
 
-    func test_parse_invalidValue() {
+    func testParseInvalidValue() {
         let argument1 = Argument<Int>(name: nil, documentation: nil)
         argument1.setup(withLabel: "label")
         var arguments = ["2.5"]
@@ -96,7 +96,7 @@ class ArgumentTests: XCTestCase {
         XCTAssertEqual(error.errorDescription, "invalid format 'invalid-value' for argument 'argument-name'")
     }
 
-    func test_parse_validValue() throws {
+    func testParseValidValue() throws {
         let argument = Argument<Int>(name: nil, documentation: nil)
         argument.setup(withLabel: "label")
         var arguments = ["5", "2", "whatever"]
@@ -105,7 +105,7 @@ class ArgumentTests: XCTestCase {
         XCTAssertEqual(arguments, ["2", "whatever"])
     }
 
-    func test_parse_option() throws {
+    func testParseOption() throws {
         let argument = Argument<String>(name: "argument", documentation: nil)
         var arguments = ["--option"]
         XCTAssertFalse(try argument.parse(arguments: &arguments))

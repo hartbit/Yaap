@@ -2,13 +2,13 @@ import XCTest
 @testable import Yaap
 
 class HelpTests: XCTestCase {
-    func test_generateUsage_minimal() {
+    func testGenerateUsageMinimal() {
         XCTAssertEqual(Help().generateUsage(in: [DummyCommand(name: "tool"), DummyCommand(name: "command")]), """
             tool command
             """)
     }
 
-    func test_generateUsage_parameters() {
+    func testGenerateUsageParameters() {
         class TestCommand: Command {
             let name = "test"
             let output = Argument<String>()
@@ -26,7 +26,7 @@ class HelpTests: XCTestCase {
             """)
     }
 
-    func test_generateUsage_subCommand() {
+    func testGenerateUsageSubCommand() {
         class GroupCommand: Command {
             let name = "group"
             let subcommand = SubCommand(commands: [
@@ -45,13 +45,13 @@ class HelpTests: XCTestCase {
             """)
     }
 
-    func test_generateHelp_minimal() {
+    func testGenerateHelpMinimal() {
         XCTAssertEqual(Help().generateHelp(in: [DummyCommand(name: "super"), DummyCommand(name: "tool")]), """
             USAGE: super tool
             """)
     }
 
-    func test_generateHelp_withDocumentation() {
+    func testGenerateHelpWithDocumentation() {
         let command = DummyCommand(name: "dummy", documentation: "This is great documentation")
         XCTAssertEqual(Help().generateHelp(in: [command]), """
             OVERVIEW: This is great documentation
@@ -60,7 +60,7 @@ class HelpTests: XCTestCase {
             """)
     }
 
-    func test_generateHelp_argumentsWithoutDocumentation() {
+    func testGenerateHelpArgumentsWithoutDocumentation() {
         class TestCommand: Command {
             let name = "test"
             let documentation = "This is great documentation"
@@ -79,7 +79,7 @@ class HelpTests: XCTestCase {
             """)
     }
 
-    func test_generateHelp_argumentsWithDocumentation() {
+    func testGenerateHelpArgumentsWithDocumentation() {
         class TestCommand: Command {
             let name = "test"
             let documentation = "This is great documentation"
@@ -102,7 +102,7 @@ class HelpTests: XCTestCase {
             """)
     }
 
-    func test_generateHelp_optionsWithoutDocumentation() {
+    func testGenerateHelpOptionsWithoutDocumentation() {
         class TestCommand: Command {
             let name = "testing"
             let documentation = "This is great documentation"
@@ -131,7 +131,7 @@ class HelpTests: XCTestCase {
             """)
     }
 
-    func test_generateHelp_optionsWithDocumentation() {
+    func testGenerateHelpOptionsWithDocumentation() {
         class TestCommand: Command {
             let name = "test"
             let documentation = "This is great documentation"
@@ -160,7 +160,7 @@ class HelpTests: XCTestCase {
             """)
     }
 
-    func test_generateHelp_subCommand() {
+    func testGenerateHelpSubCommand() {
         class GroupCommand: Command {
             let name = "group"
             let documentation: String = "This is the group command documentation"
@@ -187,4 +187,93 @@ class HelpTests: XCTestCase {
             """)
     }
 
+    func testValidate() {
+        class TestCommand: Command {
+            let name = "test"
+            let documentation = "This is great documentation"
+            let help = Help()
+
+            func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
+            }
+        }
+
+        let command = TestCommand()
+
+        var outputStream = "" as TextOutputStream
+        var errorStream = "" as TextOutputStream
+        XCTAssertExit(0, command.parseAndRun(
+            arguments: ["--help"],
+            outputStream: &outputStream,
+            errorStream: &errorStream))
+        XCTAssertEqual(errorStream as! String, "")
+        XCTAssertEqual(outputStream as! String, """
+            OVERVIEW: This is great documentation
+
+            USAGE: test [options]
+
+            OPTIONS:
+              --help, -h    Display available options [default: false]
+            """)
+
+        outputStream = "" as TextOutputStream
+        errorStream = "" as TextOutputStream
+        XCTAssertExit(0, command.parseAndRun(
+            arguments: ["-h"],
+            outputStream: &outputStream,
+            errorStream: &errorStream))
+        XCTAssertEqual(errorStream as! String, "")
+        XCTAssertEqual(outputStream as! String, """
+            OVERVIEW: This is great documentation
+
+            USAGE: test [options]
+
+            OPTIONS:
+              --help, -h    Display available options [default: false]
+            """)
+    }
+
+    func testValidateCustomNameAndShorthand() {
+        class TestCommand: Command {
+            let name = "test"
+            let documentation = "Ceci est une super documentation"
+            let help = Help(name: "aide", shorthand: "a", documentation: "Afficher les options")
+
+            func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
+            }
+        }
+
+        let command = TestCommand()
+
+        var outputStream = "" as TextOutputStream
+        var errorStream = "" as TextOutputStream
+        XCTAssertExit(0, command.parseAndRun(
+            arguments: ["--aide"],
+            outputStream: &outputStream,
+            errorStream: &errorStream))
+        XCTAssertEqual(errorStream as! String, "")
+        XCTAssertEqual(outputStream as! String, """
+            OVERVIEW: Ceci est une super documentation
+
+            USAGE: test [options]
+
+            OPTIONS:
+              --aide, -a    Afficher les options [default: false]
+            """)
+
+        outputStream = "" as TextOutputStream
+        errorStream = "" as TextOutputStream
+        XCTAssertExit(0, command.parseAndRun(
+            arguments: ["-a"],
+            outputStream: &outputStream,
+            errorStream: &errorStream))
+        XCTAssertEqual(errorStream as! String, "")
+        XCTAssertEqual(outputStream as! String, """
+            OVERVIEW: Ceci est une super documentation
+
+            USAGE: test [options]
+
+            OPTIONS:
+              --aide, -a    Afficher les options [default: false]
+            """)
+    }
 }

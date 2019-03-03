@@ -2,30 +2,30 @@ import XCTest
 @testable import Yaap
 
 class ArgumentTypeTests: XCTestCase {
-    func test_string_noValue() {
+    func testStringNoValue() {
         var arguments: [String] = []
         XCTAssertThrowsError(try String(arguments: &arguments), equals: ParseError.missingArgument)
     }
 
-    func test_string_validValue() {
+    func testStringValidValue() {
         var arguments = ["hello", "world"]
         XCTAssertEqual(try String(arguments: &arguments), "hello")
         XCTAssertEqual(arguments, ["world"])
     }
 
-    func test_bool_noValue() throws {
+    func testBoolNoValue() throws {
         var arguments: [String] = []
         XCTAssertThrowsError(try Bool(arguments: &arguments), equals: ParseError.missingArgument)
     }
 
-    func test_bool_invalidValue() {
+    func testBoolInvalidValue() {
         var arguments = ["0"]
         XCTAssertThrowsError(try Bool(arguments: &arguments), equals: ParseError.invalidFormat("0"))
         arguments = ["hello"]
         XCTAssertThrowsError(try Bool(arguments: &arguments), equals: ParseError.invalidFormat("hello"))
     }
 
-    func test_bool_validValue() {
+    func testBoolValidValue() {
         var arguments = ["true", "false"]
         XCTAssertEqual(try Bool(arguments: &arguments), true)
         XCTAssertEqual(arguments, ["false"])
@@ -35,7 +35,7 @@ class ArgumentTypeTests: XCTestCase {
         XCTAssertEqual(arguments, ["hello"])
     }
 
-    func test_integers_noValue() {
+    func testIntegersNoValue() {
         var arguments: [String] = []
         XCTAssertThrowsError(try Int(arguments: &arguments), equals: ParseError.missingArgument)
         XCTAssertThrowsError(try Int8(arguments: &arguments), equals: ParseError.missingArgument)
@@ -49,7 +49,7 @@ class ArgumentTypeTests: XCTestCase {
         XCTAssertThrowsError(try UInt64(arguments: &arguments), equals: ParseError.missingArgument)
     }
 
-    func test_integers_invalidValue() {
+    func testIntegersInvalidValue() {
         var arguments = ["two"]
         XCTAssertThrowsError(try Int(arguments: &arguments), equals: ParseError.invalidFormat("two"))
         XCTAssertEqual(arguments, ["two"])
@@ -91,7 +91,7 @@ class ArgumentTypeTests: XCTestCase {
         XCTAssertEqual(arguments, ["big"])
     }
 
-    func test_integers_validValue() {
+    func testIntegersValidValue() {
         var arguments = ["4", "-128", "58", "95", "-29", "4", "128", "58", "95", "29", "other"]
         XCTAssertEqual(try Int(arguments: &arguments), 4)
         XCTAssertEqual(arguments, ["-128", "58", "95", "-29", "4", "128", "58", "95", "29", "other"])
@@ -115,13 +115,13 @@ class ArgumentTypeTests: XCTestCase {
         XCTAssertEqual(arguments, ["other"])
     }
 
-    func test_floatingPoints_noValue() {
+    func testFloatingPointsNoValue() {
         var arguments: [String] = []
         XCTAssertThrowsError(try Float(arguments: &arguments), equals: ParseError.missingArgument)
         XCTAssertThrowsError(try Double(arguments: &arguments), equals: ParseError.missingArgument)
     }
 
-    func test_floatingPoints_invalidValue() {
+    func testFloatingPointsInvalidValue() {
         var arguments = ["two"]
         XCTAssertThrowsError(try Float(arguments: &arguments), equals: ParseError.invalidFormat("two"))
         XCTAssertEqual(arguments, ["two"])
@@ -131,7 +131,7 @@ class ArgumentTypeTests: XCTestCase {
         XCTAssertEqual(arguments, ["74eff"])
     }
 
-    func test_floatingPoints_validValue() {
+    func testFloatingPointsValidValue() {
         var arguments = ["2.5", "56", "5e10", "7.84394", "hello", "world"]
         XCTAssertEqual(try Float(arguments: &arguments), 2.5)
         XCTAssertEqual(arguments, ["56", "5e10", "7.84394", "hello", "world"])
@@ -143,13 +143,13 @@ class ArgumentTypeTests: XCTestCase {
         XCTAssertEqual(arguments, ["hello", "world"])
     }
 
-    func test_collections_noValue() {
+    func testCollectionsNoValue() {
         var arguments: [String] = []
         XCTAssertThrowsError(try [String](arguments: &arguments), equals: ParseError.missingArgument)
         XCTAssertThrowsError(try Set<Int>(arguments: &arguments), equals: ParseError.missingArgument)
     }
 
-    func test_collections_invalidValue() {
+    func testCollectionsInvalidValue() {
         var arguments = ["invalid"]
         XCTAssertThrowsError(try [Int](arguments: &arguments), equals: ParseError.invalidFormat("invalid"))
         XCTAssertEqual(arguments, ["invalid"])
@@ -159,7 +159,7 @@ class ArgumentTypeTests: XCTestCase {
         XCTAssertEqual(arguments, ["not"])
     }
 
-    func test_collections_validValue() {
+    func testCollectionsValidValue() {
         var arguments = ["hello", "world", "!"]
         XCTAssertEqual(try [String](arguments: &arguments), ["hello", "world", "!"])
         XCTAssertEqual(arguments, [])

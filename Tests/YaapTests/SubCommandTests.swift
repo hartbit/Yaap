@@ -2,18 +2,18 @@ import XCTest
 @testable import Yaap
 
 class SubCommandTests: XCTestCase {
-    func test_priority() {
+    func testPriority() {
         let subCommand = SubCommand(commands: [])
         XCTAssertEqual(subCommand.priority, 0.25)
     }
 
-    func test_usage() {
+    func testUsage() {
         let subCommand = SubCommand(commands: [])
         subCommand.setup(withLabel: "label")
         XCTAssertEqual(subCommand.usage, "label")
     }
 
-    func test_help() {
+    func testHelp() {
         let subCommand = SubCommand(commands: [
             DummyCommand(name: "edit", documentation: "The documentation for edit"),
             DummyCommand(name: "unedit", documentation: "The documentation for unedit"),
@@ -28,7 +28,7 @@ class SubCommandTests: XCTestCase {
         ])
     }
 
-    func test_parse_noArguments() {
+    func testParseNoArguments() {
         let subCommand = SubCommand(commands: [
             DummyCommand(name: "edit"),
             DummyCommand(name: "unedit"),
@@ -41,7 +41,7 @@ class SubCommandTests: XCTestCase {
         XCTAssertThrowsError(try subCommand.parse(arguments: &arguments), equals: SubCommandMissingError())
     }
 
-    func test_parse_invalidValue() {
+    func testParseInvalidValue() {
         let subCommand = SubCommand(commands: [
             DummyCommand(name: "edit"),
             DummyCommand(name: "unedit"),
@@ -71,7 +71,7 @@ class SubCommandTests: XCTestCase {
             equals: InvalidSubCommandError(command: "unnedit", suggestion: "unedit"))
     }
 
-    func test_parse_validCommand() throws {
+    func testParseValidCommand() throws {
         let mockCommand = MockCommand()
         let subCommand = SubCommand(commands: [mockCommand])
 

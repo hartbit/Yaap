@@ -2,7 +2,7 @@ import XCTest
 @testable import Yaap
 
 class OptionTests: XCTestCase {
-    func test_initializer() {
+    func testInitializer() {
         let option1 = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
         XCTAssertNil(option1.name)
         XCTAssertNil(option1.shorthand)
@@ -20,7 +20,7 @@ class OptionTests: XCTestCase {
         XCTAssertEqual(option2.documentation, "Super documentation")
     }
 
-    func test_priority() {
+    func testPriority() {
         let option1 = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
         XCTAssertEqual(option1.priority, 0.75)
 
@@ -28,7 +28,7 @@ class OptionTests: XCTestCase {
         XCTAssertEqual(option2.priority, 0.75)
     }
 
-    func test_usage() {
+    func testUsage() {
         let option1 = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
         option1.setup(withLabel: "label")
         XCTAssertEqual(option1.usage, "[options]")
@@ -38,7 +38,7 @@ class OptionTests: XCTestCase {
         XCTAssertEqual(option2.usage, "[options]")
     }
 
-    func test_help() {
+    func testHelp() {
         let option1 = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
         option1.setup(withLabel: "label")
         XCTAssertEqual(option1.info, [
@@ -80,7 +80,7 @@ class OptionTests: XCTestCase {
         ])
     }
 
-    func test_parse_noArguments() throws {
+    func testParseNoArguments() throws {
         let option = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
         option.setup(withLabel: "label")
         var arguments: [String] = []
@@ -88,7 +88,7 @@ class OptionTests: XCTestCase {
         XCTAssertEqual(option.value, 42)
     }
 
-    func test_parse_noStart() throws {
+    func testParseNoStart() throws {
         let option = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
         option.setup(withLabel: "label")
 
@@ -108,7 +108,7 @@ class OptionTests: XCTestCase {
         XCTAssertEqual(arguments, ["-o", "test"])
     }
 
-    func test_parse_noValue() throws {
+    func testParseNoValue() throws {
         let option = Option<Int>(name: "option", shorthand: "o", defaultValue: 42)
         option.setup(withLabel: "label")
 
@@ -128,7 +128,7 @@ class OptionTests: XCTestCase {
             """)
     }
 
-    func test_parse_invalidValue() throws {
+    func testParseInvalidValue() throws {
         let option = Option<Int>(name: "option", shorthand: "o", defaultValue: 42)
         option.setup(withLabel: "label")
 
@@ -146,7 +146,7 @@ class OptionTests: XCTestCase {
         XCTAssertEqual(error.errorDescription, "invalid format 'invalid-value' for option '--option'")
     }
 
-    func test_parse_validValue() throws {
+    func testParseValidValue() throws {
         let option1 = Option<Int>(name: "option", shorthand: "o", defaultValue: 42)
         option1.setup(withLabel: "label")
 
@@ -174,7 +174,7 @@ class OptionTests: XCTestCase {
         XCTAssertEqual(arguments, ["-l", "98"])
     }
 
-    func test_parse_boolean() throws {
+    func testParseBoolean() throws {
         let option = Option<Bool>(name: "option", shorthand: "o")
         option.setup(withLabel: "label")
 
@@ -189,7 +189,7 @@ class OptionTests: XCTestCase {
         XCTAssertEqual(arguments, [])
     }
 
-    func test_parse_upToNextOptional() throws {
+    func testParseUpToNextOptional() throws {
         let option1 = Option<String>(name: "option", shorthand: "o", defaultValue: "something")
 
         var arguments = ["--option", "-v"]
@@ -205,7 +205,7 @@ class OptionTests: XCTestCase {
         XCTAssertEqual(arguments, ["--other", "three"])
     }
 
-    func test_parse_multipleFlags() throws {
+    func testParseMultipleFlags() throws {
         let option1 = Option<Bool>(name: "option", shorthand: "o")
 
         var arguments = ["-ab"]

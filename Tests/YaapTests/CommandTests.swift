@@ -37,7 +37,7 @@ class ErrorCommand: Command {
 }
 
 class CommandTests: XCTestCase {
-    func test_parse() throws {
+    func testParse() throws {
         class TestCommand: Command {
             let name = "test"
             let input = Argument<String>()
@@ -59,7 +59,7 @@ class CommandTests: XCTestCase {
         XCTAssertEqual(command.extra.value, 1)
     }
 
-    func test_parse_unexpectedArgument() {
+    func testParseUnexpectedArgument() {
         class TestCommand: Command {
             let name = "test"
 

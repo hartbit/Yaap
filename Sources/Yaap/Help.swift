@@ -2,12 +2,16 @@ import Foundation
 
 public class Help: Option<Bool> {
     public override init(
-        name: String? = "help",
-        shorthand: Character? = "h",
+        name: String? = nil,
+        shorthand: Character? = nil,
         defaultValue: Bool = false,
-        documentation: String? = "Display available options"
+        documentation: String? = nil
     ) {
-        super.init(name: name, shorthand: shorthand, defaultValue: defaultValue, documentation: documentation)
+        super.init(
+            name: name ?? "help",
+            shorthand: shorthand ?? "h",
+            defaultValue: defaultValue,
+            documentation: documentation ?? "Display available options")
     }
 
     public override func validate(
