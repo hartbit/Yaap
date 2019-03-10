@@ -9,7 +9,7 @@ internal var exitProcess: (Int32) -> Void = { code in
     exit(code)
 }
 
-public protocol Command: ArgumentParser {
+public protocol Command: ArgumentParsable {
     var name: String { get }
     var documentation: String { get }
 
