@@ -33,7 +33,7 @@ class HelpTests: XCTestCase {
                 DummyCommand(name: "edit"),
                 DummyCommand(name: "unedit"),
                 DummyCommand(name: "random")
-                ])
+            ])
 
             func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
                 try subcommand.value?.run(outputStream: &outputStream, errorStream: &errorStream)
@@ -138,7 +138,7 @@ class HelpTests: XCTestCase {
             let input = Argument<String>(name: "files", documentation: "This is the input documentation")
             let output = Argument<String>(documentation: "This is the output documentation")
             let times = Argument<Int>()
-            let verbose = Option<Bool>(shorthand: "v", defaultValue: false, documentation: "This is the verbose documentation")
+            let verbose = Option<Bool>(shorthand: "v", defaultValue: false, documentation: "Verbose documentation")
             let extra = Option<Int>(defaultValue: 2, documentation: "This is the extra documentation")
 
             func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
@@ -156,7 +156,7 @@ class HelpTests: XCTestCase {
 
             OPTIONS:
               --extra          This is the extra documentation [default: 2]
-              --verbose, -v    This is the verbose documentation [default: false]
+              --verbose, -v    Verbose documentation [default: false]
             """)
     }
 
@@ -205,8 +205,8 @@ class HelpTests: XCTestCase {
             arguments: ["--help"],
             outputStream: &outputStream,
             errorStream: &errorStream))
-        XCTAssertEqual(errorStream as! String, "")
-        XCTAssertEqual(outputStream as! String, """
+        XCTAssertEqual(errorStream as? String, "")
+        XCTAssertEqual(outputStream as? String, """
             OVERVIEW: This is great documentation
 
             USAGE: test [options]
@@ -221,8 +221,8 @@ class HelpTests: XCTestCase {
             arguments: ["-h"],
             outputStream: &outputStream,
             errorStream: &errorStream))
-        XCTAssertEqual(errorStream as! String, "")
-        XCTAssertEqual(outputStream as! String, """
+        XCTAssertEqual(errorStream as? String, "")
+        XCTAssertEqual(outputStream as? String, """
             OVERVIEW: This is great documentation
 
             USAGE: test [options]
@@ -250,8 +250,8 @@ class HelpTests: XCTestCase {
             arguments: ["--aide"],
             outputStream: &outputStream,
             errorStream: &errorStream))
-        XCTAssertEqual(errorStream as! String, "")
-        XCTAssertEqual(outputStream as! String, """
+        XCTAssertEqual(errorStream as? String, "")
+        XCTAssertEqual(outputStream as? String, """
             OVERVIEW: Ceci est une super documentation
 
             USAGE: test [options]
@@ -266,8 +266,8 @@ class HelpTests: XCTestCase {
             arguments: ["-a"],
             outputStream: &outputStream,
             errorStream: &errorStream))
-        XCTAssertEqual(errorStream as! String, "")
-        XCTAssertEqual(outputStream as! String, """
+        XCTAssertEqual(errorStream as? String, "")
+        XCTAssertEqual(outputStream as? String, """
             OVERVIEW: Ceci est une super documentation
 
             USAGE: test [options]

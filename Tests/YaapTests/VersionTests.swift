@@ -19,8 +19,8 @@ class VersionTests: XCTestCase {
             arguments: ["--version"],
             outputStream: &outputStream,
             errorStream: &errorStream))
-        XCTAssertEqual(errorStream as! String, "")
-        XCTAssertEqual(outputStream as! String, "TestTool 2.4-alpha")
+        XCTAssertEqual(errorStream as? String, "")
+        XCTAssertEqual(outputStream as? String, "TestTool 2.4-alpha")
 
         outputStream = "" as TextOutputStream
         errorStream = "" as TextOutputStream
@@ -28,8 +28,8 @@ class VersionTests: XCTestCase {
             arguments: ["-v"],
             outputStream: &outputStream,
             errorStream: &errorStream))
-        XCTAssertEqual(errorStream as! String, "")
-        XCTAssertEqual(outputStream as! String, "TestTool 2.4-alpha")
+        XCTAssertEqual(errorStream as? String, "")
+        XCTAssertEqual(outputStream as? String, "TestTool 2.4-alpha")
     }
 
     func testValidateCustomNameAndShorthand() {
@@ -49,8 +49,8 @@ class VersionTests: XCTestCase {
             arguments: ["--wersja"],
             outputStream: &outputStream,
             errorStream: &errorStream))
-        XCTAssertEqual(errorStream as! String, "")
-        XCTAssertEqual(outputStream as! String, "TestTool 1.0.1")
+        XCTAssertEqual(errorStream as? String, "")
+        XCTAssertEqual(outputStream as? String, "TestTool 1.0.1")
 
         outputStream = "" as TextOutputStream
         errorStream = "" as TextOutputStream
@@ -58,7 +58,7 @@ class VersionTests: XCTestCase {
             arguments: ["-w"],
             outputStream: &outputStream,
             errorStream: &errorStream))
-        XCTAssertEqual(errorStream as! String, "")
-        XCTAssertEqual(outputStream as! String, "TestTool 1.0.1")
+        XCTAssertEqual(errorStream as? String, "")
+        XCTAssertEqual(outputStream as? String, "TestTool 1.0.1")
     }
 }

@@ -53,11 +53,16 @@ class ExtensionsTests: XCTestCase {
     }
 
     // Test with strings and substrings
-    func levenshteinDistance(from: String, to: String, file: StaticString = #file, line: UInt = #line) -> Int {
+    func levenshteinDistance(
+        from source: String,
+        to destination: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> Int {
         let stringDistance = from.levenshteinDistance(to: to)
-        let fromSubstring = "before\(from)after".dropFirst(6).dropLast(5)
-        let toSubstring = "prefix\(to)suffix".dropFirst(6).dropLast(6)
-        let substringDistance = fromSubstring.levenshteinDistance(to: toSubstring)
+        let sourceSubstring = "before\(source)after".dropFirst(6).dropLast(5)
+        let destinationSubstring = "prefix\(destination)suffix".dropFirst(6).dropLast(6)
+        let substringDistance = fromSubstring.levenshteinDistance(to: destinationSubstring)
         XCTAssertEqual(
             stringDistance,
             substringDistance,

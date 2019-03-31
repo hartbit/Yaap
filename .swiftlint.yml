@@ -1,0 +1,5 @@
+disabled_rules:
+  - type_body_length
+  - nesting
+excluded:
+  - Tests/*/XCTestManifests.swift

@@ -24,7 +24,7 @@ class SubCommandTests: XCTestCase {
         XCTAssertEqual(subCommand.info, [
             PropertyInfo(category: "SUBCOMMANDS", label: "edit", documentation: "The documentation for edit"),
             PropertyInfo(category: "SUBCOMMANDS", label: "random", documentation: ""),
-            PropertyInfo(category: "SUBCOMMANDS", label: "unedit", documentation: "The documentation for unedit"),
+            PropertyInfo(category: "SUBCOMMANDS", label: "unedit", documentation: "The documentation for unedit")
         ])
     }
 

@@ -86,8 +86,8 @@ class CommandTests: XCTestCase {
         var errorStream: TextOutputStream = ""
         XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
 
-        XCTAssertEqual(outputStream as! String, "")
-        XCTAssertEqual(errorStream as! String, """
+        XCTAssertEqual(outputStream as? String, "")
+        XCTAssertEqual(errorStream as? String, """
             \u{001B}[31merror:\u{001B}[0m The operation couldn’t be completed. (YaapTests.DummyError error 1.)
 
             """)
@@ -97,8 +97,8 @@ class CommandTests: XCTestCase {
         errorStream = ""
         XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
 
-        XCTAssertEqual(outputStream as! String, "")
-        XCTAssertEqual(errorStream as! String, """
+        XCTAssertEqual(outputStream as? String, "")
+        XCTAssertEqual(errorStream as? String, """
             \u{001B}[31merror:\u{001B}[0m dummy-localized-error
 
             """)
@@ -108,8 +108,8 @@ class CommandTests: XCTestCase {
         errorStream = ""
         XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
 
-        XCTAssertEqual(outputStream as! String, "")
-        XCTAssertEqual(errorStream as! String, """
+        XCTAssertEqual(outputStream as? String, "")
+        XCTAssertEqual(errorStream as? String, """
             \u{001B}[31merror:\u{001B}[0m The operation couldn’t be completed. (YaapTests.DummyError error 1.)
 
             """)
@@ -119,8 +119,8 @@ class CommandTests: XCTestCase {
         errorStream = ""
         XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
 
-        XCTAssertEqual(outputStream as! String, "")
-        XCTAssertEqual(errorStream as! String, """
+        XCTAssertEqual(outputStream as? String, "")
+        XCTAssertEqual(errorStream as? String, """
             \u{001B}[31merror:\u{001B}[0m dummy-localized-error
 
             """)

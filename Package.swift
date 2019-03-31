@@ -7,7 +7,7 @@ let package = Package(
     products: [
         .library(
             name: "Yaap",
-            targets: ["Yaap"]),
+            targets: ["Yaap"])
     ],
     targets: [
         .target(
@@ -18,7 +18,7 @@ let package = Package(
             dependencies: ["Yaap"]),
         .testTarget(
             name: "YaapTests",
-            dependencies: ["Yaap"]),
+            dependencies: ["Yaap"])
     ],
     swiftLanguageVersions: [.v5]
 )

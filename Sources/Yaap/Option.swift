@@ -101,8 +101,8 @@ public class Option<T: ArgumentType>: CommandProperty {
             return false
         }
 
-        if type(of: value) == Bool.self {
-            value = true as! T
+        if let trueT = true as? T {
+            value = trueT
         } else {
             let endIndex = arguments.firstIndex(where: { $0.starts(with: "-") }) ?? arguments.endIndex
 

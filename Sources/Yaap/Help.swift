@@ -25,7 +25,7 @@ public class Help: Option<Bool> {
         }
     }
 
-    func generateUsage(in commands: [Command]) -> String {
+    internal func generateUsage(in commands: [Command]) -> String {
         let commandsUsage = commands.map({ $0.name })
         let properties = commands.last!.sortedProperties()
         let propertiesUsage = properties
@@ -35,7 +35,7 @@ public class Help: Option<Bool> {
         return (commandsUsage + propertiesUsage).joined(separator: " ")
     }
 
-    func generateHelp(in commands: [Command]) -> String {
+    internal func generateHelp(in commands: [Command]) -> String {
         var sections: [String] = []
 
         if !commands.last!.documentation.isEmpty {

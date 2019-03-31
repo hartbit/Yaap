@@ -44,7 +44,6 @@ func XCTAssertThrowsError<T, E: Error & Equatable>(
     })
 }
 
-
 func XCTAssertExit(
     _ expectedCode: Int32,
     _ closure: @autoclosure () -> Void,
