@@ -6,7 +6,7 @@ public class Argument<T: ArgumentType>: CommandProperty {
     /// The full name used to reference the argument in the help output.
     public private(set) var name: String?
 
-    /// The documentation of the option used to describe it in the help output.
+    /// The documentation used to describe the argument it the help output.
     public let documentation: String?
 
     /// The argument's value. It starts with `nil` and then contains the value parsed from the latest invocation of

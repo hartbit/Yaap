@@ -13,7 +13,7 @@ public class Option<T: ArgumentType>: CommandProperty {
     /// The default value the option will take if it is not defined in a command line invocation.
     public let defaultValue: T
 
-    /// The documentation of the option used to describe it in the help output.
+    /// The documentation used to describe the option it the help output.
     public let documentation: String?
 
     /// The option's value. It starts with `defaultValue` and then contains the value parsed from the latest invocation

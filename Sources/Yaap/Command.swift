@@ -5,14 +5,30 @@ import Darwin
 import Glibc
 #endif
 
-internal var exitProcess: (Int32) -> Void = { code in
-    exit(code)
-}
-
+/// A type representing an executable command that can be setup using command line arguments before being run.
+///
+/// To conform to this protocol, simply implement the `run(outputStream:errorStream:)` function with the logic the
+/// command should execute when invoked from the command line.
+///
+/// The `outputStream` and `errorStream` arguments represent
+/// the standard output and standard error streams. If the function throws an error conforming to `LocalizedError`, its
+/// `errorDescription` property will be printed to standard error. If not, its `localizedDescription` proeprty will be
+/// used.
+///
+/// Any `CommandProperty` conforming properties on the command will be parsed before the `run(outputStream:errorStream)`
+/// function is called.
 public protocol Command: ArgumentParsable {
+    /// The name of the command.
     var name: String { get }
+
+    /// The documentation used to describe the command it the help output.
     var documentation: String { get }
 
+    /// Runs a command in its current state.
+    /// - Parameters:
+    ///   - outputStream: The output stream where the command writes its output data.
+    ///   - errorStream: The error stream where the command outputs error messages or diagnostics.
+    /// - Throws: The command can throw any error in its operation.
     func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws
 }
 
@@ -45,6 +61,7 @@ public extension Command {
         return true
     }
 
+    /// Sets up the command with the process' command line arguments and then runs it.
     func parseAndRun() {
         let arguments = Array(CommandLine.arguments.dropFirst())
         var standardOutput: TextOutputStream = FileOutputStream(handle: .standardOutput)
@@ -52,6 +69,11 @@ public extension Command {
         parseAndRun(arguments: arguments, outputStream: &standardOutput, errorStream: &standardError)
     }
 
+    /// Sets up the command with arguments and then runs it.
+    /// - Parameters:
+    ///   - arguments: The arguments to parse to setup the command.
+    ///   - outputStream: The output stream where the command writes its output data.
+    ///   - errorStream: The error stream where the command outputs error messages or diagnostics.
     func parseAndRun(arguments: [String], outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) {
         do {
             var arguments = arguments
@@ -107,10 +129,16 @@ internal extension Command {
     }
 }
 
+/// An error type thrown during `Command` parsing when encountering an unexpected argument.
 public struct CommandUnexpectedArgumentError: LocalizedError, Equatable {
+    /// The unexpected argument.
     public let argument: String
 
     public var errorDescription: String? {
         return "unexpected argument '\(argument)'"
     }
+}
+
+internal var exitProcess: (Int32) -> Void = { code in
+    exit(code)
 }
