@@ -1,9 +1,18 @@
 import Foundation
 
+/// A type representing a mandatory command property that must be set at a specific position of the command line
+/// arguments.
 public class Argument<T: ArgumentType>: CommandProperty {
+    /// The full name used to reference the argument in the help output.
     public private(set) var name: String?
+
+    /// The documentation of the option used to describe it in the help output.
     public let documentation: String?
+
+    /// The argument's value. It starts with `nil` and then contains the value parsed from the latest invocation of
+    /// `parse(arguments:)`.
     public private(set) var value: T!
+
     public let priority = 0.25
 
     public var usage: String? {
@@ -63,7 +72,9 @@ public class Argument<T: ArgumentType>: CommandProperty {
     }
 }
 
+/// An error type thrown during `Argument` parsing when the value is missing.
 public struct ArgumentMissingError: LocalizedError, Equatable {
+    /// The name of the argument that is missing a value.
     public let argument: String
 
     public var errorDescription: String? {
@@ -71,8 +82,12 @@ public struct ArgumentMissingError: LocalizedError, Equatable {
     }
 }
 
+/// An error type thrown during `Argument` parsing when the value is not formatted correctly.
 public struct ArgumentInvalidFormatError: LocalizedError, Equatable {
+    /// The name of the argument that has an incorrectly formatted value.
     public let argument: String
+
+    /// The value that is incorrectly formatted.
     public let value: String
 
     public var errorDescription: String? {

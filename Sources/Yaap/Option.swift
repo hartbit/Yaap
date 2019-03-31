@@ -3,7 +3,7 @@ import Foundation
 /// A type representing an optional command property that can be set using the `--option value`, `--option=value` or a
 /// shorthand `-o value` and `-o=value` command line argument syntax.
 public class Option<T: ArgumentType>: CommandProperty {
-    /// The full name used to reference the option in command line arguments, without the `--` prefix.
+    /// The name used to reference the option in command line arguments and the help output, without the `--` prefix.
     public private(set) var name: String?
 
     /// The single-character name used to reference the option in the shorthand command ine syntax. A `nil` value
@@ -73,9 +73,11 @@ public class Option<T: ArgumentType>: CommandProperty {
         }
     }
 
+    //TODO: Support --option=value and -o=value syntax.
     @discardableResult
     public func parse(arguments: inout [String]) throws -> Bool {
         guard let name = name else {
+            //TODO: Should return a different error.
             throw ParseError.missingArgument
         }
 
@@ -141,7 +143,9 @@ extension Option where T == Bool {
     }
 }
 
+/// An error type thrown during `Option` parsing when the value is missing.
 public struct OptionMissingValueError: LocalizedError, Equatable {
+    /// The parsed option argument that is missing a value.
     public let option: String
 
     public var errorDescription: String? {
@@ -151,8 +155,12 @@ public struct OptionMissingValueError: LocalizedError, Equatable {
     }
 }
 
+/// An error type thrown during `Option` parsing when the value is not formatted correctly.
 public struct OptionInvalidFormatError: LocalizedError, Equatable {
+    /// The parsed option argument that has an incorrectly formatted value.
     public let option: String
+
+    /// The value that is incorrectly formatted.
     public let value: String
 
     public var errorDescription: String? {

@@ -1,7 +1,7 @@
-/// A type that can initialized from a list of arguments.
+/// A type that can be initialized from a list of arguments.
 public protocol ArgumentType: CustomStringConvertible {
-    /// Creates an instance of the `ArgumentType` from the arguments at the front an argument list passed by reference,
-    /// returning the unused arguments through the reference.
+    /// Creates an instance of the `ArgumentType` conforming type from the arguments at the front an argument list
+    /// passed by reference, returning the unused arguments through the reference.
     /// - Throws: Throws if the arguments don't allow creating an instance, either because they are too few or because
     ///   they are not formatted correctly.
     init(arguments: inout [String]) throws
