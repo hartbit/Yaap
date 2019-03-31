@@ -1,11 +1,25 @@
 import Foundation
 
+/// A type representing an optional command property that can be set using the `--option value`, `--option=value` or a
+/// shorthand `-o value` and `-o=value` command line argument syntax.
 public class Option<T: ArgumentType>: CommandProperty {
+    /// The full name used to reference the option in command line arguments, without the `--` prefix.
     public private(set) var name: String?
+
+    /// The single-character name used to reference the option in the shorthand command ine syntax. A `nil` value
+    /// means the shorthand syntax is disabled.
     public let shorthand: Character?
+
+    /// The default value the option will take if it is not defined in a command line invocation.
     public let defaultValue: T
+
+    /// The documentation of the option used to describe it in the help output.
     public let documentation: String?
+
+    /// The option's value. It starts with `defaultValue` and then contains the value parsed from the latest invocation
+    /// of `parse(arguments:)`.
     public private(set) var value: T
+
     public let priority = 0.75
 
     public var usage: String? {
@@ -37,6 +51,14 @@ public class Option<T: ArgumentType>: CommandProperty {
         ]
     }
 
+    /// Creates an instance of `Option`.
+    /// - Parameters:
+    ///   - name: The full name used to reference the option in command line arguments, without the `--` prefix. Pass
+    ///     nil to have it default to the property's identifier name.
+    ///   - shorthand: The single-character name used to reference the option in the shorthand command ine syntax. Pass
+    ///     `nil` to disable the shorthand syntax.
+    ///   - defaultValue: The default value the option should take if it is not defined in a command line invocation.
+    ///   - documentation: The documentation of the option used to describe it in the help output.
     public init(name: String? = nil, shorthand: Character? = nil, defaultValue: T, documentation: String? = nil) {
         self.name = name
         self.shorthand = shorthand
@@ -107,6 +129,13 @@ public class Option<T: ArgumentType>: CommandProperty {
 }
 
 extension Option where T == Bool {
+    /// Creates an instance of a `Option<Bool>` that defaults to `false`.
+    /// - Parameters:
+    ///   - name: The full name used to reference the option in command line arguments, without the `--` prefix. Pass
+    ///     nil to have it default to the property's identifier name.
+    ///   - shorthand: The single-character name used to reference the option in the shorthand command ine syntax. Pass
+    ///     `nil` to disable the shorthand syntax.
+    ///   - documentation: The documentation of the option used to describe it in the help output.
     public convenience init(name: String? = nil, shorthand: Character? = nil, documentation: String? = nil) {
         self.init(name: name, shorthand: shorthand, defaultValue: false, documentation: documentation)
     }

@@ -10,7 +10,8 @@ public protocol ArgumentParsable: AnyObject {
     /// - Note: If the function can parse from the start of the array, it should remove all the arguments it used and
     ///   return `true`. If not, it should return `false` and not mutate the `arguments` parameter. If the arguments
     ///   are available to setup the object but are invalid, the function should throw an error.
-    @discardableResult func parse(arguments: inout [String]) throws -> Bool
+    @discardableResult
+    func parse(arguments: inout [String]) throws -> Bool
 }
 
 /// A type representing the textual information concerning a command's property.
@@ -21,13 +22,13 @@ public struct PropertyInfo: Equatable {
     /// The label, or name, of the property. This is used to refer to the property in the usage and help output.
     public let label: String
 
-    /// The documentation of the property. This is used to describe the property in the help output.
+    /// The documentation of the property used to describe it in the help output.
     public let documentation: String
 }
 
 /// A type representing a command property that can be setup with command line arguments.
 public protocol CommandProperty: ArgumentParsable {
-    /// The priority that will affect the order the property is be parsed in. Higher priority properties are parsed
+    /// The priority that will affect the order the property is to be parsed in. Higher priority properties are parsed
     /// first. Properties with the same priority will parse in the order they are defined in the command.
     var priority: Double { get }
 
