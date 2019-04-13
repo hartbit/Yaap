@@ -59,10 +59,10 @@ class ExtensionsTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> Int {
-        let stringDistance = from.levenshteinDistance(to: to)
+        let stringDistance = source.levenshteinDistance(to: destination)
         let sourceSubstring = "before\(source)after".dropFirst(6).dropLast(5)
         let destinationSubstring = "prefix\(destination)suffix".dropFirst(6).dropLast(6)
-        let substringDistance = fromSubstring.levenshteinDistance(to: destinationSubstring)
+        let substringDistance = sourceSubstring.levenshteinDistance(to: destinationSubstring)
         XCTAssertEqual(
             stringDistance,
             substringDistance,

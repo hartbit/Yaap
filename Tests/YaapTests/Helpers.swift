@@ -35,7 +35,7 @@ func XCTAssertThrowsError<T, E: Error & Equatable>(
     file: StaticString = #file,
     line: UInt = #line
 ) {
-    XCTAssertThrowsError(expression(), "should have thrown", file: file, line: line, { thrownError in
+    try XCTAssertThrowsError(expression(), "should have thrown", file: file, line: line, { thrownError in
         XCTAssert(
             thrownError as? E == expectedError,
             "\(thrownError) si not equal to \(expectedError)",

@@ -225,4 +225,23 @@ class OptionTests: XCTestCase {
             try option2.parse(arguments: &arguments),
             equals: OptionMissingValueError(option: "-o"))
     }
+
+    func testParseEqualSyntax() throws {
+        let option = Option<Int>(name: "option", shorthand: "o", defaultValue: 42)
+
+        var arguments = ["--option=12", "other"]
+        XCTAssertTrue(try option.parse(arguments: &arguments))
+        XCTAssertEqual(option.value, 12)
+        XCTAssertEqual(arguments, ["other"])
+
+        arguments = ["-o=33", "other"]
+        XCTAssertTrue(try option.parse(arguments: &arguments))
+        XCTAssertEqual(option.value, 33)
+        XCTAssertEqual(arguments, ["other"])
+
+        arguments = ["--option=invalid"]
+        XCTAssertThrowsError(
+            try option.parse(arguments: &arguments),
+            equals: OptionInvalidFormatError(option: "--option", value: "invalid"))
+    }
 }

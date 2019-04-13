@@ -73,7 +73,6 @@ public class Option<T: ArgumentType>: CommandProperty {
         }
     }
 
-    //TODO: Support --option=value and -o=value syntax.
     @discardableResult
     public func parse(arguments: inout [String]) throws -> Bool {
         guard let name = name else {
@@ -87,10 +86,34 @@ public class Option<T: ArgumentType>: CommandProperty {
 
         if argument == "--\(name)" {
             arguments.removeFirst()
+        } else if argument.starts(with: "--\(name)=") {
+            arguments.removeFirst()
+
+            let equalIndex = argument.index(argument.startIndex, offsetBy: name.count + 2)
+            let option = String(argument[..<equalIndex])
+            let valueStartIndex = argument.index(after: equalIndex)
+            let value = String(argument[valueStartIndex...])
+
+            var innerArguments = [value]
+            try parse(option: option, innerArguments: &innerArguments)
+            return true
         } else if let shorthand = shorthand, argument.starts(with: "-\(shorthand)") {
             if argument.count == 2 {
                 arguments.removeFirst()
             } else {
+                let nextIndex = argument.index(argument.startIndex, offsetBy: 2)
+                if argument[nextIndex] == "=" {
+                    arguments.removeFirst()
+
+                    let option = String(argument[..<nextIndex])
+                    let valueStartIndex = argument.index(after: nextIndex)
+                    let value = String(argument[valueStartIndex...])
+
+                    var innerArguments = [value]
+                    try parse(option: option, innerArguments: &innerArguments)
+                    return true
+                }
+
                 guard type(of: value) == Bool.self else {
                     throw OptionMissingValueError(option: "-\(shorthand)")
                 }
@@ -106,16 +129,9 @@ public class Option<T: ArgumentType>: CommandProperty {
             value = trueT
         } else {
             let endIndex = arguments.firstIndex(where: { $0.starts(with: "-") }) ?? arguments.endIndex
-
-            do {
-                var innerArguments = [String](arguments[..<endIndex])
-                value = try T(arguments: &innerArguments)
-                arguments = innerArguments + arguments[endIndex..<arguments.endIndex]
-            } catch ParseError.missingArgument {
-                throw OptionMissingValueError(option: argument)
-            } catch ParseError.invalidFormat(let value) {
-                throw OptionInvalidFormatError(option: argument, value: value)
-            }
+            var innerArguments = [String](arguments[..<endIndex])
+            try parse(option: argument, innerArguments: &innerArguments)
+            arguments = innerArguments + arguments[endIndex..<arguments.endIndex]
         }
 
         return true
@@ -126,6 +142,16 @@ public class Option<T: ArgumentType>: CommandProperty {
         outputStream: inout TextOutputStream,
         errorStream: inout TextOutputStream
     ) throws {
+    }
+
+    private func parse(option: String, innerArguments: inout [String]) throws {
+        do {
+            value = try T(arguments: &innerArguments)
+        } catch ParseError.missingArgument {
+            throw OptionMissingValueError(option: option)
+        } catch ParseError.invalidFormat(let value) {
+            throw OptionInvalidFormatError(option: option, value: value)
+        }
     }
 }
 
