@@ -55,7 +55,7 @@ class CommandTests: XCTestCase {
 
         XCTAssertEqual(command.input.value, "inputfile.txt")
         XCTAssertEqual(command.times.value, 4)
-        XCTAssertEqual(command.verbose.value, false)
+        XCTAssertFalse(command.verbose.value)
         XCTAssertEqual(command.extra.value, 1)
     }
 

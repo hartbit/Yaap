@@ -1,5 +1,7 @@
 import Foundation
 
+//swiftlint:disable explicit_acl
+
 extension Collection where Element: Comparable {
     internal func compactConsecutiveSame() -> [Element] {
         var newArray: [Element] = []

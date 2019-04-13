@@ -14,7 +14,7 @@ public class Version: Option<Bool> {
         super.init(name: name, shorthand: shorthand, defaultValue: defaultValue, documentation: documentation)
     }
 
-    public override func validate(
+    override public func validate(
         in commands: [Command],
         outputStream: inout TextOutputStream,
         errorStream: inout TextOutputStream

@@ -180,12 +180,12 @@ class OptionTests: XCTestCase {
 
         var arguments = ["--option", "other"]
         XCTAssertTrue(try option.parse(arguments: &arguments))
-        XCTAssertEqual(option.value, true)
+        XCTAssertTrue(option.value)
         XCTAssertEqual(arguments, ["other"])
 
         arguments = ["-o"]
         XCTAssertTrue(try option.parse(arguments: &arguments))
-        XCTAssertEqual(option.value, true)
+        XCTAssertTrue(option.value)
         XCTAssertEqual(arguments, [])
     }
 
@@ -210,12 +210,12 @@ class OptionTests: XCTestCase {
 
         var arguments = ["-ab"]
         XCTAssertFalse(try option1.parse(arguments: &arguments))
-        XCTAssertEqual(option1.value, false)
+        XCTAssertFalse(option1.value)
         XCTAssertEqual(arguments, ["-ab"])
 
         arguments = ["-oxy"]
         XCTAssertTrue(try option1.parse(arguments: &arguments))
-        XCTAssertEqual(option1.value, true)
+        XCTAssertTrue(option1.value)
         XCTAssertEqual(arguments, ["-xy"])
 
         let option2 = Option<String>(name: "option", shorthand: "o", defaultValue: "default")

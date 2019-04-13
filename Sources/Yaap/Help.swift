@@ -1,7 +1,7 @@
 import Foundation
 
 public class Help: Option<Bool> {
-    public override init(
+    override public init(
         name: String? = nil,
         shorthand: Character? = nil,
         defaultValue: Bool = false,
@@ -14,7 +14,7 @@ public class Help: Option<Bool> {
             documentation: documentation ?? "Display available options")
     }
 
-    public override func validate(
+    override public func validate(
         in commands: [Command],
         outputStream: inout TextOutputStream,
         errorStream: inout TextOutputStream

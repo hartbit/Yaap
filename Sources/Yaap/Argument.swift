@@ -52,7 +52,7 @@ public class Argument<T: ArgumentType>: CommandProperty {
         }
 
         do {
-            value = try T.init(arguments: &arguments)
+            value = try T(arguments: &arguments)
             return true
         } catch ParseError.missingArgument {
             throw ArgumentMissingError(argument: name ?? "")

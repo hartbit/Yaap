@@ -27,11 +27,11 @@ class ArgumentTypeTests: XCTestCase {
 
     func testBoolValidValue() {
         var arguments = ["true", "false"]
-        XCTAssertEqual(try Bool(arguments: &arguments), true)
+        XCTAssertTrue(try Bool(arguments: &arguments))
         XCTAssertEqual(arguments, ["false"])
 
         arguments = ["false", "hello"]
-        XCTAssertEqual(try Bool(arguments: &arguments), false)
+        XCTAssertFalse(try Bool(arguments: &arguments))
         XCTAssertEqual(arguments, ["hello"])
     }
 

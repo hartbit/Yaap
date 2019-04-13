@@ -1,0 +1,3 @@
+opt_in_rules:
+  - explicit_acl
+  - missing_docs

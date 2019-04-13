@@ -32,6 +32,8 @@ public protocol Command: ArgumentParsable {
     func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws
 }
 
+// Default implementations
+//swiftlint:disable missing_docs
 public extension Command {
     var documentation: String {
         return ""
@@ -60,7 +62,11 @@ public extension Command {
 
         return true
     }
+}
+//swiftlint:enable explicit_acl
 
+//swiftlint:disable:next missing_docs
+public extension Command {
     /// Sets up the command with the process' command line arguments and then runs it.
     func parseAndRun() {
         let arguments = Array(CommandLine.arguments.dropFirst())
@@ -87,6 +93,11 @@ public extension Command {
         }
     }
 
+    /// Validates each property in the command.
+    /// - Parameters:
+    ///   - commands: The list of commands the command is contained in, from root to leaf, including this command.
+    ///   - outputStream: The output stream where the command writes its output data.
+    ///   - errorStream: The error stream where the command outputs error messages or diagnostics.
     func validate(
         in commands: [Command],
         outputStream: inout TextOutputStream,
@@ -99,6 +110,7 @@ public extension Command {
 }
 
 internal extension Command {
+    //swiftlint:disable:next explicit_acl
     func sortedProperties() -> [CommandProperty] {
         let mirrors = sequence(first: Mirror(reflecting: self), next: { $0.superclassMirror })
         let children = mirrors.lazy.flatMap({ $0.children })
@@ -116,7 +128,7 @@ internal extension Command {
 
         let sortedProperties = properties
             .enumerated()
-            .sorted(by: { (lhs, rhs) -> Bool in
+            .sorted(by: { lhs, rhs -> Bool in
                 if lhs.element.priority != rhs.element.priority {
                     return lhs.element.priority > rhs.element.priority
                 } else {

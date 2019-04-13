@@ -77,8 +77,7 @@ public class Option<T: ArgumentType>: CommandProperty {
     @discardableResult
     public func parse(arguments: inout [String]) throws -> Bool {
         guard let name = name else {
-            //TODO: Should return a different error.
-            throw ParseError.missingArgument
+            fatalError("parse called before setup(withLabel:)")
         }
 
         guard let argument = arguments.first else {
@@ -110,7 +109,7 @@ public class Option<T: ArgumentType>: CommandProperty {
 
             do {
                 var innerArguments = [String](arguments[..<endIndex])
-                value = try T.init(arguments: &innerArguments)
+                value = try T(arguments: &innerArguments)
                 arguments = innerArguments + arguments[endIndex..<arguments.endIndex]
             } catch ParseError.missingArgument {
                 throw OptionMissingValueError(option: argument)
@@ -130,6 +129,7 @@ public class Option<T: ArgumentType>: CommandProperty {
     }
 }
 
+//swiftlint:disable:next explicit_acl extension_access_modifier
 extension Option where T == Bool {
     /// Creates an instance of a `Option<Bool>` that defaults to `false`.
     /// - Parameters:
