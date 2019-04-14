@@ -21,6 +21,7 @@ public class Version: Option<Bool> {
     ) throws {
         if value {
             outputStream.write(version)
+            outputStream.write("\n")
             exitProcess(0)
         }
     }

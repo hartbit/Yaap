@@ -21,6 +21,7 @@ public class Help: Option<Bool> {
     ) throws {
         if value {
             outputStream.write(generateHelp(in: commands))
+            outputStream.write("\n")
             exitProcess(0)
         }
     }
