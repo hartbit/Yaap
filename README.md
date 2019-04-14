@@ -14,17 +14,36 @@ import Yaap
 
 class RandomCommand: Command {
     let documentation = "Generates a random integer in a certain interval"
-    let maximum = Argument<Int>()
-    let minimum = Option<Int>(defaultValue: 0)
+    let maximum = Argument<Int>(
+        documentation: "Exclusive upper-bound of the generated number")
+    let minimum = Option<Int>(
+        defaultValue: 0,
+        documentation: "Inclusive lower-bound of the generated number")
+    let help = Help()
+    let version = Version("1.0")
 
     func run() throws {
         print(Int.random(in: minimum.value..<maximum.value))
     }
 }
 
-let tool = Tool(name: "rand", version: "1.0", command: RandomCommand())
-tool.run()
+let command = Command()
+command.parseAndRun()
 ```
+
+## Installation
+
+## Usage
+
+### Arguments
+
+### Options
+
+### Sub-commands
+
+### Help
+
+### Version
 
 ## Thanks
 

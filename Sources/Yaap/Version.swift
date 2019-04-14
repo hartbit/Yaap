@@ -4,7 +4,7 @@ public class Version: Option<Bool> {
     public let version: String
 
     public init(
-        version: String,
+        _ version: String,
         name: String? = "version",
         shorthand: Character? = "v",
         defaultValue: Bool = false,
