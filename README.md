@@ -1,39 +1,65 @@
 # Yaap
 
-Yaap is Yet Another (Swift) Argument Parser that supports:
+Yaap is Yet Another (Swift) Argument Parser that represents executable commands as types and argument and options as properties of those types. It supports:
 
 * Strongly-typed argument and option parsing
 * Automatic help and usage message generation
 * Multiple command routing
 * Smart error messages with suggestion on typos
 
-Command are defined using subclasses of the `Command` class and argument and options are defined as properties:
+Here's a self-contained example of a `rand` executable that generates random numbers in a configurable interval to standard output, with everything from `--help` documentation, usage generation, and `--version` printing.
 
 ```swift
 import Yaap
+import Foundation
 
 class RandomCommand: Command {
-    let documentation = "Generates a random integer in a certain interval"
-    let maximum = Argument<Int>(
-        documentation: "Exclusive upper-bound of the generated number")
-    let minimum = Option<Int>(
-        defaultValue: 0,
-        documentation: "Inclusive lower-bound of the generated number")
-    let help = Help()
-    let version = Version("1.0")
+    let name = "rand"
+    let documentation = "Generates a random number that lies in an interval."
 
-    func run() throws {
-        print(Int.random(in: minimum.value..<maximum.value))
+    let maximum = Argument<Int>(documentation: "Exclusive maximum value")
+    let minimum = Option<Int>(shorthand: "m", defaultValue: 0, documentation: "Inclusive minimum value")
+    let help = Help()
+    let version = Version("0.1.0")
+
+    func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
+        guard maximum.value > minimum.value else {
+            throw InvalidIntervalError(minimum: minimum.value, maximum: maximum.value)
+        }
+
+        outputStream.write(Int.random(in: minimum.value..<maximum.value).description)
     }
 }
 
-let command = Command()
-command.parseAndRun()
+struct InvalidIntervalError: LocalizedError {
+    let minimum: Int
+    let maximum: Int
+
+    var errorDescription: String? {
+        return "invalid interval [\(minimum), \(maximum))"
+    }
+}
+
+RandomCommand().parseAndRun()
 ```
 
 ## Installation
 
+Yaap can be installed as a Swift Package Manager dependency. Here's the declaration for depending on the latest stable version:
+
+```swift
+let package = Package(
+    dependencies: [
+        .package(url: "https://github.com/hartbit/Yaap.git", from: "0.1.0")
+    ]
+)
+```
+
 ## Usage
+
+### Commands
+
+In Yaap, an executable program is represented by a class that conforms to the `Command` protocol.
 
 ### Arguments
 
@@ -43,7 +69,54 @@ command.parseAndRun()
 
 ### Help
 
+Yaap comes with a built-in `Help` property that parses `--help/-h` arguments and prints the command's detailed documentation to standard output. It can be configured with a different name and shorthand syntax. Using the `RandomCommand` example from above:
+
+```swift
+class RandomCommand: Command {
+    let name = "rand"
+    let documentation = "Generates a random number that lies in an interval."
+    let maximum = Argument<Int>(documentation: "Exclusive maximum value")
+    let minimum = Option<Int>(shorthand: "m", defaultValue: 0, documentation: "Inclusive minimum value")
+    let help = Help()
+
+    func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
+        // ...
+    }
+}
+
+MyCommand().parseAndRun()
+```
+
+```
+$ rand --help
+OVERVIEW: Generates a random number that lies in an interval.
+
+USAGE: rand [options] <maximum>
+
+ARGUMENTS:
+  maximum          Exclusive maximum value
+
+OPTIONS:
+  --help, -h       Display available options [default: false]
+  --minimum, -m    Inclusive minimum value [default: 0]
+```
+
 ### Version
+
+Yaap also comes with a built-in `Version` property that allows commands to respond to a `--version/-v` argument by printing their version number to standard output. The property can be customized to respond to a different argument name and optional shorthand syntax:
+
+```swift
+class MyCommand: Command {
+    let version = Version("4.2", name: "ver", shorthand: nil)
+}
+
+MyCommand().parseAndRun()
+```
+
+```
+$ program --ver
+4.2
+```
 
 ## Thanks
 
