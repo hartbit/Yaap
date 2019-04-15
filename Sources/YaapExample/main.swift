@@ -3,16 +3,23 @@ import Foundation
 
 class RandomCommand: Command {
     let name = "rand"
-    let maximum = Argument<Int>(documentation: "Exlcusive maximum value")
-    let minimum = Option<Int>(shorthand: "m", defaultValue: 0, documentation: "Inclusive minimum value")
+    let documentation = "Generates a random number that lies in an interval."
+
+    @Argument(documentation: "Exclusive maximum value")
+    var maximum: Int
+
+    @Option(shorthand: "m", defaultValue: 0, documentation: "Inclusive minimum value")
+    var minimum: Int
+
     let help = Help()
+    let version = Version("0.1.0")
 
     func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
-        guard maximum.value > minimum.value else {
-            throw InvalidIntervalError(minimum: minimum.value, maximum: maximum.value)
+        guard maximum > minimum else {
+            throw InvalidIntervalError(minimum: minimum, maximum: maximum)
         }
 
-        print(Int.random(in: minimum.value..<maximum.value))
+        outputStream.write(Int.random(in: minimum..<maximum).description)
     }
 }
 
@@ -25,5 +32,4 @@ struct InvalidIntervalError: LocalizedError {
     }
 }
 
-let rand = RandomCommand()
-rand.parseAndRun()
+RandomCommand().parseAndRun()

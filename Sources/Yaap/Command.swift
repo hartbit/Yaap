@@ -117,7 +117,11 @@ internal extension Command {
         let properties = children.compactMap({ child -> CommandProperty? in
             if let property = child.value as? CommandProperty {
                 if let label = child.label {
-                    property.setup(withLabel: label)
+                    if label.first == "$" {
+                        property.setup(withLabel: String(label.dropFirst()))
+                    } else {
+                        property.setup(withLabel: label)
+                    }
                 }
 
                 return property

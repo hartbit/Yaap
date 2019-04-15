@@ -2,6 +2,7 @@ import Foundation
 
 /// A type representing an optional command property that can be set using the `--option value`, `--option=value` or a
 /// shorthand `-o value` and `-o=value` command line argument syntax.
+@propertyDelegate
 public class Option<T: ArgumentType>: CommandProperty {
     /// The name used to reference the option in command line arguments and the help output, without the `--` prefix.
     public private(set) var name: String?
