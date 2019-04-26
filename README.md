@@ -59,11 +59,81 @@ let package = Package(
 
 ### Commands
 
-In Yaap, an executable program is represented by a class that conforms to the `Command` protocol.
+In Yaap, a command is a self-contained operation defined as a class conforming to the `Command` protocol: arguments (if any) are defined as properties and execution logic is defined in a `run(outputStream:errorStream)` function. Simple programs only need one command but can grow more as necessary.
+
+A command must also define a `name` (the executable name), that will appear in the usage description, and an optional `documentation` property, that will appear in the help output.
+
+```swift
+class HelloWorldCommand: Command {
+    let name = "hello-world"
+    let description = "My first command"
+
+    func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
+        outputStream.write("Hello World")
+    }
+}
+```
+
+Commands can parse command-line arguments and run themselves with the `parseAndRun` function:
+
+```swift
+let command = HelloWorldCommand()
+command.parseAndRun()
+```
+
+Any errors thrown by `run(outputStream:errorStream)` will be caught and reported to the standard error stream.
 
 ### Arguments
 
+Mandatory arguments are defined using the generic `Argument` type and are parsed in the order they are declared in the command. They can also be configured with an optional `name` and `documentation` that will show in the help output:
+
+```swift
+class SplitCommand: Command {
+    let name = "split"
+    let string = Argument<String>(documentation: "The string to split.")
+    let sep = Argument<String>(name: "separator", documentation: "The seperator to split the string with.")
+
+    func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
+        outputStream.write(string.value.split(separator: separator.value).joined("\n"))
+    }
+}
+```
+
+```
+$ split "The Swift Programming Language" " "
+The
+Swift
+Programming
+Language
+```
+
 ### Options
+
+Optional arguments are defined using the generic `Option` type and must provide a `defaultValue`. The are parsed using the `--option value` or `--option=value` syntax where `option` is the name of the property, which can be customized with an optional `name` parameter. There is also an optional `shorthand` parameter to allow parsing them with a single character syntax of `-o value` or `-o=value`. Again, `documentation` can be provided for the help output:
+
+```swift
+class SplitCommand: Command {
+    let name = "split"
+    let string = Argument<String>()
+    let sep = Optional<String>(
+        name: "separator",
+        shorthand: "s",
+        defaultValue: " ",
+        documentation: "The seperator to split the string with.")
+
+    func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
+        outputStream.write(string.value.split(separator: sep.value).joined("\n"))
+    }
+}
+```
+
+```
+$ split a,b,c,d --separator ,
+a
+b
+c
+d
+```
 
 ### Sub-commands
 
@@ -117,6 +187,8 @@ MyCommand().parseAndRun()
 $ program --ver
 4.2
 ```
+
+### Custom Types
 
 ## Thanks
 
