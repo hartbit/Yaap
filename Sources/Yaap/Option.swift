@@ -2,7 +2,7 @@ import Foundation
 
 /// A type representing an optional command property that can be set using the `--option value`, `--option=value` or a
 /// shorthand `-o value` and `-o=value` command line argument syntax.
-@propertyDelegate
+@propertyWrapper
 public class Option<T: ArgumentType>: CommandProperty {
     /// The name used to reference the option in command line arguments and the help output, without the `--` prefix.
     public private(set) var name: String?
@@ -20,6 +20,7 @@ public class Option<T: ArgumentType>: CommandProperty {
     /// The option's value. It starts with `defaultValue` and then contains the value parsed from the latest invocation
     /// of `parse(arguments:)`.
     public private(set) var value: T
+    public var wrappedValue: T { value }
 
     public let priority = 0.75
 
@@ -54,16 +55,16 @@ public class Option<T: ArgumentType>: CommandProperty {
 
     /// Creates an instance of `Option`.
     /// - Parameters:
+    ///   - initialValue: The default value the option should take if it is not defined in a command line invocation.
     ///   - name: The full name used to reference the option in command line arguments, without the `--` prefix. Pass
     ///     nil to have it default to the property's identifier name.
     ///   - shorthand: The single-character name used to reference the option in the shorthand command ine syntax. Pass
     ///     `nil` to disable the shorthand syntax.
-    ///   - defaultValue: The default value the option should take if it is not defined in a command line invocation.
     ///   - documentation: The documentation of the option used to describe it in the help output.
-    public init(name: String? = nil, shorthand: Character? = nil, defaultValue: T, documentation: String? = nil) {
+    public init(initialValue: T, name: String? = nil, shorthand: Character? = nil, documentation: String? = nil) {
+        defaultValue = initialValue
         self.name = name
         self.shorthand = shorthand
-        self.defaultValue = defaultValue
         self.documentation = documentation
         self.value = defaultValue
     }
@@ -166,7 +167,7 @@ extension Option where T == Bool {
     ///     `nil` to disable the shorthand syntax.
     ///   - documentation: The documentation of the option used to describe it in the help output.
     public convenience init(name: String? = nil, shorthand: Character? = nil, documentation: String? = nil) {
-        self.init(name: name, shorthand: shorthand, defaultValue: false, documentation: documentation)
+        self.init(initialValue: false, name: name, shorthand: shorthand, documentation: documentation)
     }
 }
 

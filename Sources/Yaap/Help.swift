@@ -2,15 +2,15 @@ import Foundation
 
 public class Help: Option<Bool> {
     override public init(
+        initialValue: Bool = false,
         name: String? = nil,
         shorthand: Character? = nil,
-        defaultValue: Bool = false,
         documentation: String? = nil
     ) {
         super.init(
+            initialValue: initialValue,
             name: name ?? "help",
             shorthand: shorthand ?? "h",
-            defaultValue: defaultValue,
             documentation: documentation ?? "Display available options")
     }
 

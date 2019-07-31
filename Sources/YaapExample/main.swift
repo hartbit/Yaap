@@ -8,8 +8,8 @@ class RandomCommand: Command {
     @Argument(documentation: "Exclusive maximum value")
     var maximum: Int
 
-    @Option(shorthand: "m", defaultValue: 0, documentation: "Inclusive minimum value")
-    var minimum: Int
+    @Option(shorthand: "m", documentation: "Inclusive minimum value")
+    var minimum: Int = 0
 
     let help = Help()
     let version = Version("0.1.0")

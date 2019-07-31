@@ -5,7 +5,7 @@ class VersionTests: XCTestCase {
     func testValidate() {
         class TestCommand: Command {
             let name = "test"
-            let version = Version(version: "TestTool 2.4-alpha")
+            let version = Version("TestTool 2.4-alpha")
 
             func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
             }
@@ -20,7 +20,7 @@ class VersionTests: XCTestCase {
             outputStream: &outputStream,
             errorStream: &errorStream))
         XCTAssertEqual(errorStream as? String, "")
-        XCTAssertEqual(outputStream as? String, "TestTool 2.4-alpha")
+        XCTAssertEqual(outputStream as? String, "TestTool 2.4-alpha\n")
 
         outputStream = "" as TextOutputStream
         errorStream = "" as TextOutputStream
@@ -29,13 +29,13 @@ class VersionTests: XCTestCase {
             outputStream: &outputStream,
             errorStream: &errorStream))
         XCTAssertEqual(errorStream as? String, "")
-        XCTAssertEqual(outputStream as? String, "TestTool 2.4-alpha")
+        XCTAssertEqual(outputStream as? String, "TestTool 2.4-alpha\n")
     }
 
     func testValidateCustomNameAndShorthand() {
         class TestCommand: Command {
             let name = "test"
-            let version = Version(version: "TestTool 1.0.1", name: "wersja", shorthand: "w")
+            let version = Version("TestTool 1.0.1", name: "wersja", shorthand: "w")
 
             func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
             }
@@ -50,7 +50,7 @@ class VersionTests: XCTestCase {
             outputStream: &outputStream,
             errorStream: &errorStream))
         XCTAssertEqual(errorStream as? String, "")
-        XCTAssertEqual(outputStream as? String, "TestTool 1.0.1")
+        XCTAssertEqual(outputStream as? String, "TestTool 1.0.1\n")
 
         outputStream = "" as TextOutputStream
         errorStream = "" as TextOutputStream
@@ -59,6 +59,6 @@ class VersionTests: XCTestCase {
             outputStream: &outputStream,
             errorStream: &errorStream))
         XCTAssertEqual(errorStream as? String, "")
-        XCTAssertEqual(outputStream as? String, "TestTool 1.0.1")
+        XCTAssertEqual(outputStream as? String, "TestTool 1.0.1\n")
     }
 }

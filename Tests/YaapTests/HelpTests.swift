@@ -11,11 +11,11 @@ class HelpTests: XCTestCase {
     func testGenerateUsageParameters() {
         class TestCommand: Command {
             let name = "test"
-            let output = Argument<String>()
-            let input = Argument<String>(name: "files")
-            let times = Argument<Int>()
-            let extra = Option<Int>(defaultValue: 1)
-            let verbose = Option<Bool>(defaultValue: false)
+            @Argument var output: String
+            @Argument(name: "files") var input: String
+            @Argument var times: Int
+            @Option var extra = 1
+            @Option var verbose = false
 
             func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
             }
@@ -64,9 +64,9 @@ class HelpTests: XCTestCase {
         class TestCommand: Command {
             let name = "test"
             let documentation = "This is great documentation"
-            let output = Argument<String>()
-            let input = Argument<String>(name: "files")
-            let times = Argument<Int>()
+            @Argument var output: String
+            @Argument(name: "files") var input: String
+            @Argument var times: Int
 
             func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
             }
@@ -83,9 +83,9 @@ class HelpTests: XCTestCase {
         class TestCommand: Command {
             let name = "test"
             let documentation = "This is great documentation"
-            let output = Argument<String>(documentation: "This is the output documentation")
-            let input = Argument<String>(name: "files", documentation: "This is the input documentation")
-            let times = Argument<Int>()
+            @Argument(documentation: "This is the output documentation") var output: String
+            @Argument(name: "files", documentation: "This is the input documentation") var input: String
+            @Argument var times: Int
 
             func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
             }
@@ -106,11 +106,11 @@ class HelpTests: XCTestCase {
         class TestCommand: Command {
             let name = "testing"
             let documentation = "This is great documentation"
-            let output = Argument<String>(documentation: "This is the output documentation")
-            let input = Argument<String>(name: "files", documentation: "This is the input documentation")
-            let times = Argument<Int>()
-            let extra = Option<Int>(defaultValue: 1)
-            let verbose = Option<Bool>(shorthand: "v", defaultValue: false)
+            @Argument(documentation: "This is the output documentation") var output: String
+            @Argument(name: "files", documentation: "This is the input documentation") var input: String
+            @Argument var times: Int
+            @Option var extra = 1
+            @Option(shorthand: "v") var verbose = false
 
             func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
             }
@@ -135,11 +135,11 @@ class HelpTests: XCTestCase {
         class TestCommand: Command {
             let name = "test"
             let documentation = "This is great documentation"
-            let input = Argument<String>(name: "files", documentation: "This is the input documentation")
-            let output = Argument<String>(documentation: "This is the output documentation")
-            let times = Argument<Int>()
-            let verbose = Option<Bool>(shorthand: "v", defaultValue: false, documentation: "Verbose documentation")
-            let extra = Option<Int>(defaultValue: 2, documentation: "This is the extra documentation")
+            @Argument(name: "files", documentation: "This is the input documentation") var input: String
+            @Argument(documentation: "This is the output documentation") var output: String
+            @Argument var times: Int
+            @Option(shorthand: "v", documentation: "Verbose documentation") var verbose = false
+            @Option(documentation: "This is the extra documentation") var extra = 2
 
             func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
             }
@@ -213,6 +213,7 @@ class HelpTests: XCTestCase {
 
             OPTIONS:
               --help, -h    Display available options [default: false]
+
             """)
 
         outputStream = "" as TextOutputStream
@@ -229,6 +230,7 @@ class HelpTests: XCTestCase {
 
             OPTIONS:
               --help, -h    Display available options [default: false]
+
             """)
     }
 
@@ -258,6 +260,7 @@ class HelpTests: XCTestCase {
 
             OPTIONS:
               --aide, -a    Afficher les options [default: false]
+
             """)
 
         outputStream = "" as TextOutputStream
@@ -274,6 +277,7 @@ class HelpTests: XCTestCase {
 
             OPTIONS:
               --aide, -a    Afficher les options [default: false]
+
             """)
     }
 }

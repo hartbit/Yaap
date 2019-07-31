@@ -2,7 +2,7 @@ import Foundation
 
 /// A type representing a mandatory command property that must be set at a specific position of the command line
 /// arguments.
-@propertyDelegate
+@propertyWrapper
 public class Argument<T: ArgumentType>: CommandProperty {
     /// The full name used to reference the argument in the help output.
     public private(set) var name: String?
@@ -11,9 +11,10 @@ public class Argument<T: ArgumentType>: CommandProperty {
     public let documentation: String?
 
     /// The argument's value. It contains the value parsed from the latest invocation of `parse(arguments:)`.
-    private var _value: T?
-    public var value: T {
-        guard let value = _value else { preconditionFailure("value has not been set") }
+    public var value: T!
+
+    public var wrappedValue: T {
+        guard let value = value else { preconditionFailure("value has not been set") }
         return value
     }
 
@@ -36,6 +37,12 @@ public class Argument<T: ArgumentType>: CommandProperty {
         }
     }
 
+    public init()
+    {
+        self.name = nil
+        self.documentation = nil
+    }
+
     public init(name: String? = nil, documentation: String? = nil) {
         self.name = name
         self.documentation = documentation
@@ -56,7 +63,7 @@ public class Argument<T: ArgumentType>: CommandProperty {
         }
 
         do {
-            _value = try T(arguments: &arguments)
+            value = try T(arguments: &arguments)
             return true
         } catch ParseError.missingArgument {
             throw ArgumentMissingError(argument: name ?? "")
@@ -70,7 +77,7 @@ public class Argument<T: ArgumentType>: CommandProperty {
         outputStream: inout TextOutputStream,
         errorStream: inout TextOutputStream
     ) throws {
-        guard _value != nil else {
+        guard value != nil else {
             throw ArgumentMissingError(argument: name ?? "")
         }
     }

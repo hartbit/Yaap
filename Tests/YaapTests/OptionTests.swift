@@ -3,16 +3,16 @@ import XCTest
 
 class OptionTests: XCTestCase {
     func testInitializer() {
-        let option1 = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
+        let option1 = Option<Int>(initialValue: 42, name: nil, shorthand: nil)
         XCTAssertNil(option1.name)
         XCTAssertNil(option1.shorthand)
         XCTAssertEqual(option1.defaultValue, 42)
         XCTAssertNil(option1.documentation)
 
         let option2 = Option<String>(
+            initialValue: "default",
             name: "option",
             shorthand: "o",
-            defaultValue: "default",
             documentation: "Super documentation")
         XCTAssertEqual(option2.name, "option")
         XCTAssertEqual(option2.shorthand, "o")
@@ -21,25 +21,25 @@ class OptionTests: XCTestCase {
     }
 
     func testPriority() {
-        let option1 = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
+        let option1 = Option<Int>(initialValue: 42, name: nil, shorthand: nil)
         XCTAssertEqual(option1.priority, 0.75)
 
-        let option2 = Option<Int>(name: "option", shorthand: "o", defaultValue: 42, documentation: "Some documentation")
+        let option2 = Option<Int>(initialValue: 42, name: "option", shorthand: "o", documentation: "Some documentation")
         XCTAssertEqual(option2.priority, 0.75)
     }
 
     func testUsage() {
-        let option1 = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
+        let option1 = Option<Int>(initialValue: 42, name: nil, shorthand: nil)
         option1.setup(withLabel: "label")
         XCTAssertEqual(option1.usage, "[options]")
 
-        let option2 = Option<Int>(name: "option", shorthand: "o", defaultValue: 42, documentation: "Some documentation")
+        let option2 = Option<Int>(initialValue: 42, name: "option", shorthand: "o", documentation: "Some documentation")
         option2.setup(withLabel: "label")
         XCTAssertEqual(option2.usage, "[options]")
     }
 
     func testHelp() {
-        let option1 = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
+        let option1 = Option<Int>(initialValue: 42, name: nil, shorthand: nil)
         option1.setup(withLabel: "label")
         XCTAssertEqual(option1.info, [
             PropertyInfo(
@@ -48,7 +48,7 @@ class OptionTests: XCTestCase {
                 documentation: "[default: 42]")
         ])
 
-        let option2 = Option<Int>(name: "option", shorthand: nil, defaultValue: 0)
+        let option2 = Option<Int>(initialValue: 0, name: "option", shorthand: nil)
         option2.setup(withLabel: "label")
         XCTAssertEqual(option2.info, [
             PropertyInfo(
@@ -57,7 +57,7 @@ class OptionTests: XCTestCase {
                 documentation: "[default: 0]")
         ])
 
-        let option3 = Option<String>(name: "output", shorthand: "o", defaultValue: "./")
+        let option3 = Option<String>(initialValue: "./", name: "output", shorthand: "o")
         option3.setup(withLabel: "label")
         XCTAssertEqual(option3.info, [
             PropertyInfo(
@@ -67,9 +67,9 @@ class OptionTests: XCTestCase {
         ])
 
         let option4 = Option<Bool>(
+            initialValue: true,
             name: "verbose",
             shorthand: nil,
-            defaultValue: true,
             documentation: "Awesome documentation")
         option4.setup(withLabel: "label")
         XCTAssertEqual(option4.info, [
@@ -81,7 +81,7 @@ class OptionTests: XCTestCase {
     }
 
     func testParseNoArguments() throws {
-        let option = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
+        let option = Option<Int>(initialValue: 42, name: nil, shorthand: nil)
         option.setup(withLabel: "label")
         var arguments: [String] = []
         XCTAssertFalse(try option.parse(arguments: &arguments))
@@ -89,7 +89,7 @@ class OptionTests: XCTestCase {
     }
 
     func testParseNoStart() throws {
-        let option = Option<Int>(name: nil, shorthand: nil, defaultValue: 42)
+        let option = Option<Int>(initialValue: 42, name: nil, shorthand: nil)
         option.setup(withLabel: "label")
 
         var arguments = ["one", "2", "3.0"]
@@ -109,7 +109,7 @@ class OptionTests: XCTestCase {
     }
 
     func testParseNoValue() throws {
-        let option = Option<Int>(name: "option", shorthand: "o", defaultValue: 42)
+        let option = Option<Int>(initialValue: 42, name: "option", shorthand: "o")
         option.setup(withLabel: "label")
 
         var arguments = ["--option"]
@@ -129,7 +129,7 @@ class OptionTests: XCTestCase {
     }
 
     func testParseInvalidValue() throws {
-        let option = Option<Int>(name: "option", shorthand: "o", defaultValue: 42)
+        let option = Option<Int>(initialValue: 42, name: "option", shorthand: "o")
         option.setup(withLabel: "label")
 
         var arguments = ["--option", "two"]
@@ -147,7 +147,7 @@ class OptionTests: XCTestCase {
     }
 
     func testParseValidValue() throws {
-        let option1 = Option<Int>(name: "option", shorthand: "o", defaultValue: 42)
+        let option1 = Option<Int>(initialValue: 42, name: "option", shorthand: "o")
         option1.setup(withLabel: "label")
 
         var arguments = ["--option", "6", "8"]
@@ -160,7 +160,7 @@ class OptionTests: XCTestCase {
         XCTAssertEqual(option1.value, 78)
         XCTAssertEqual(arguments, [])
 
-        let option2 = Option<Int>(defaultValue: 8)
+        let option2 = Option<Int>(initialValue: 8)
         option2.setup(withLabel: "label")
 
         arguments = ["--label", "23"]
@@ -190,14 +190,14 @@ class OptionTests: XCTestCase {
     }
 
     func testParseUpToNextOptional() throws {
-        let option1 = Option<String>(name: "option", shorthand: "o", defaultValue: "something")
+        let option1 = Option<String>(initialValue: "something", name: "option", shorthand: "o")
 
         var arguments = ["--option", "-v"]
         XCTAssertThrowsError(
             try option1.parse(arguments: &arguments),
             equals: OptionMissingValueError(option: "--option"))
 
-        let option2 = Option<[String]>(name: "option", shorthand: "o", defaultValue: [])
+        let option2 = Option<[String]>(initialValue: [], name: "option", shorthand: "o")
 
         arguments = ["--option", "one", "two", "--other", "three"]
         XCTAssertTrue(try option2.parse(arguments: &arguments))
@@ -218,7 +218,7 @@ class OptionTests: XCTestCase {
         XCTAssertTrue(option1.value)
         XCTAssertEqual(arguments, ["-xy"])
 
-        let option2 = Option<String>(name: "option", shorthand: "o", defaultValue: "default")
+        let option2 = Option<String>(initialValue: "default", name: "option", shorthand: "o")
 
         arguments = ["-oxy"]
         XCTAssertThrowsError(
@@ -227,7 +227,7 @@ class OptionTests: XCTestCase {
     }
 
     func testParseEqualSyntax() throws {
-        let option = Option<Int>(name: "option", shorthand: "o", defaultValue: 42)
+        let option = Option<Int>(initialValue: 42, name: "option", shorthand: "o")
 
         var arguments = ["--option=12", "other"]
         XCTAssertTrue(try option.parse(arguments: &arguments))

@@ -40,10 +40,10 @@ class CommandTests: XCTestCase {
     func testParse() throws {
         class TestCommand: Command {
             let name = "test"
-            let input = Argument<String>()
-            let times = Argument<Int>()
-            let verbose = Option<Bool>(shorthand: "v", defaultValue: false)
-            let extra = Option<Int>(defaultValue: 2)
+            @Argument var input: String
+            @Argument var times: Int
+            @Option(shorthand: "v") var verbose = false
+            @Option var extra = 2
 
             func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
             }
@@ -53,10 +53,10 @@ class CommandTests: XCTestCase {
         var arguments = ["--extra", "1", "inputfile.txt", "4"]
         try command.parse(arguments: &arguments)
 
-        XCTAssertEqual(command.input.value, "inputfile.txt")
-        XCTAssertEqual(command.times.value, 4)
-        XCTAssertFalse(command.verbose.value)
-        XCTAssertEqual(command.extra.value, 1)
+        XCTAssertEqual(command.input, "inputfile.txt")
+        XCTAssertEqual(command.times, 4)
+        XCTAssertFalse(command.verbose)
+        XCTAssertEqual(command.extra, 1)
     }
 
     func testParseUnexpectedArgument() {

@@ -7,11 +7,10 @@ public class Version: Option<Bool> {
         _ version: String,
         name: String? = "version",
         shorthand: Character? = "v",
-        defaultValue: Bool = false,
         documentation: String? = "Display tool version"
     ) {
         self.version = version
-        super.init(name: name, shorthand: shorthand, defaultValue: defaultValue, documentation: documentation)
+        super.init(initialValue: false, name: name, shorthand: shorthand, documentation: documentation)
     }
 
     override public func validate(
