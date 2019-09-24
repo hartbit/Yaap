@@ -61,8 +61,8 @@ public class Option<T: ArgumentType>: CommandProperty {
     ///   - shorthand: The single-character name used to reference the option in the shorthand command ine syntax. Pass
     ///     `nil` to disable the shorthand syntax.
     ///   - documentation: The documentation of the option used to describe it in the help output.
-    public init(initialValue: T, name: String? = nil, shorthand: Character? = nil, documentation: String? = nil) {
-        defaultValue = initialValue
+    public init(wrappedValue: T, name: String? = nil, shorthand: Character? = nil, documentation: String? = nil) {
+        defaultValue = wrappedValue
         self.name = name
         self.shorthand = shorthand
         self.documentation = documentation
@@ -167,7 +167,7 @@ extension Option where T == Bool {
     ///     `nil` to disable the shorthand syntax.
     ///   - documentation: The documentation of the option used to describe it in the help output.
     public convenience init(name: String? = nil, shorthand: Character? = nil, documentation: String? = nil) {
-        self.init(initialValue: false, name: name, shorthand: shorthand, documentation: documentation)
+        self.init(wrappedValue: false, name: name, shorthand: shorthand, documentation: documentation)
     }
 }
 

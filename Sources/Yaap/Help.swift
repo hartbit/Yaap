@@ -2,13 +2,13 @@ import Foundation
 
 public class Help: Option<Bool> {
     override public init(
-        initialValue: Bool = false,
+        wrappedValue: Bool = false,
         name: String? = nil,
         shorthand: Character? = nil,
         documentation: String? = nil
     ) {
         super.init(
-            initialValue: initialValue,
+            wrappedValue: wrappedValue,
             name: name ?? "help",
             shorthand: shorthand ?? "h",
             documentation: documentation ?? "Display available options")

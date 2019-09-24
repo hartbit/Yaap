@@ -10,7 +10,7 @@ public class Version: Option<Bool> {
         documentation: String? = "Display tool version"
     ) {
         self.version = version
-        super.init(initialValue: false, name: name, shorthand: shorthand, documentation: documentation)
+        super.init(wrappedValue: false, name: name, shorthand: shorthand, documentation: documentation)
     }
 
     override public func validate(
