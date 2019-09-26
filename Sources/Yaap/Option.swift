@@ -53,15 +53,109 @@ public class Option<T: ArgumentType>: CommandProperty {
         ]
     }
 
+    // The following overloads are necessary until Swift 5.2 to avoid a compiler crash in 5.1 when using Property
+    // Wrappers with initializers with default arguments.
+
     /// Creates an instance of `Option`.
     /// - Parameters:
-    ///   - initialValue: The default value the option should take if it is not defined in a command line invocation.
+    ///   - wrappedValue: The default value the option should take if it is not defined in a command line invocation.
+    public init(wrappedValue: T) {
+        defaultValue = wrappedValue
+        self.name = nil
+        self.shorthand = nil
+        self.documentation = nil
+        self.value = defaultValue
+    }
+
+    /// Creates an instance of `Option`.
+    /// - Parameters:
+    ///   - wrappedValue: The default value the option should take if it is not defined in a command line invocation.
+    ///   - name: The full name used to reference the option in command line arguments, without the `--` prefix.
+    public init(wrappedValue: T, name: String?) {
+        defaultValue = wrappedValue
+        self.name = name
+        self.shorthand = nil
+        self.documentation = nil
+        self.value = defaultValue
+    }
+
+    /// Creates an instance of `Option`.
+    /// - Parameters:
+    ///   - wrappedValue: The default value the option should take if it is not defined in a command line invocation.
+    ///   - shorthand: The single-character name used to reference the option in the shorthand command ine syntax. Pass
+    ///     `nil` to disable the shorthand syntax.
+    public init(wrappedValue: T, shorthand: Character?) {
+        defaultValue = wrappedValue
+        self.name = nil
+        self.shorthand = shorthand
+        self.documentation = nil
+        self.value = defaultValue
+    }
+
+    /// Creates an instance of `Option`.
+    /// - Parameters:
+    ///   - wrappedValue: The default value the option should take if it is not defined in a command line invocation.
+    ///   - documentation: The documentation of the option used to describe it in the help output.
+    public init(wrappedValue: T, documentation: String?) {
+        defaultValue = wrappedValue
+        self.name = nil
+        self.shorthand = nil
+        self.documentation = documentation
+        self.value = defaultValue
+    }
+
+    /// Creates an instance of `Option`.
+    /// - Parameters:
+    ///   - wrappedValue: The default value the option should take if it is not defined in a command line invocation.
+    ///   - name: The full name used to reference the option in command line arguments, without the `--` prefix. Pass
+    ///     nil to have it default to the property's identifier name.
+    ///   - shorthand: The single-character name used to reference the option in the shorthand command ine syntax. Pass
+    ///     `nil` to disable the shorthand syntax.
+    public init(wrappedValue: T, name: String?, shorthand: Character?) {
+        defaultValue = wrappedValue
+        self.name = name
+        self.shorthand = shorthand
+        self.documentation = nil
+        self.value = defaultValue
+    }
+
+    /// Creates an instance of `Option`.
+    /// - Parameters:
+    ///   - wrappedValue: The default value the option should take if it is not defined in a command line invocation.
+    ///   - name: The full name used to reference the option in command line arguments, without the `--` prefix. Pass
+    ///     nil to have it default to the property's identifier name.
+    ///   - documentation: The documentation of the option used to describe it in the help output.
+    public init(wrappedValue: T, name: String?, documentation: String?) {
+        defaultValue = wrappedValue
+        self.name = name
+        self.shorthand = nil
+        self.documentation = documentation
+        self.value = defaultValue
+    }
+
+    /// Creates an instance of `Option`.
+    /// - Parameters:
+    ///   - wrappedValue: The default value the option should take if it is not defined in a command line invocation.
+    ///   - shorthand: The single-character name used to reference the option in the shorthand command ine syntax. Pass
+    ///     `nil` to disable the shorthand syntax.
+    ///   - documentation: The documentation of the option used to describe it in the help output.
+    public init(wrappedValue: T, shorthand: Character?, documentation: String?) {
+        defaultValue = wrappedValue
+        self.name = nil
+        self.shorthand = shorthand
+        self.documentation = documentation
+        self.value = defaultValue
+    }
+
+    /// Creates an instance of `Option`.
+    /// - Parameters:
+    ///   - wrappedValue: The default value the option should take if it is not defined in a command line invocation.
     ///   - name: The full name used to reference the option in command line arguments, without the `--` prefix. Pass
     ///     nil to have it default to the property's identifier name.
     ///   - shorthand: The single-character name used to reference the option in the shorthand command ine syntax. Pass
     ///     `nil` to disable the shorthand syntax.
     ///   - documentation: The documentation of the option used to describe it in the help output.
-    public init(wrappedValue: T, name: String? = nil, shorthand: Character? = nil, documentation: String? = nil) {
+    public init(wrappedValue: T, name: String?, shorthand: Character?, documentation: String?) {
         defaultValue = wrappedValue
         self.name = name
         self.shorthand = shorthand
