@@ -19,10 +19,10 @@ class RandomCommand: Command {
 
     @Argument(documentation: "Exclusive maximum value")
     var maximum: Int
-    
+
     @Option(shorthand: "m", documentation: "Inclusive minimum value")
     var minimum = 0
-    
+
     let help = Help()
     let version = Version("0.1.0")
 
@@ -94,7 +94,7 @@ Mandatory arguments are defined using the generic `Argument` type and are parsed
 ```swift
 class SplitCommand: Command {
     let name = "split"
-    
+
     @Argument(documentation: "The string to split.")
     var string: String
     let sep = Argument<String>(name: "separator", documentation: "The seperator to split the string with.")
@@ -193,8 +193,6 @@ MyCommand().parseAndRun()
 $ program --ver
 4.2
 ```
-
-### Custom Types
 
 ## Thanks
 
