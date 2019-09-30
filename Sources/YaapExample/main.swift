@@ -20,6 +20,7 @@ class RandomCommand: Command {
         }
 
         outputStream.write(Int.random(in: minimum..<maximum).description)
+        outputStream.write("\n")
     }
 }
 
