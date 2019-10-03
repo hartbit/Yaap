@@ -54,7 +54,7 @@ Yaap can be installed as a Swift Package Manager dependency. Here's the declarat
 ```swift
 let package = Package(
     dependencies: [
-        .package(url: "https://github.com/hartbit/Yaap.git", from: "0.1.0")
+        .package(url: "https://github.com/hartbit/Yaap.git", from: "1.0.0")
     ]
 )
 ```
