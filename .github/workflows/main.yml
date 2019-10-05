@@ -1,0 +1,22 @@
+name: Test
+
+on:
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  test:
+    name: Test on Swift ${{ matrix.swift_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        swift_version: ["5.1"]
+        os: [ubuntu-latest, macOS-latest]
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: YOCKOW/Action-setup-swift@master
+      with:
+        swift-version: '5.0.3' # This value is passed to swiftenv without modification. 
+    - run: swift test --verbose
