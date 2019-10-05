@@ -37,6 +37,21 @@ extension String: ArgumentType {
     }
 }
 
+extension Character: ArgumentType {
+    public init(arguments: inout [String]) throws {
+        guard let argument = arguments.first else {
+            throw ParseError.missingArgument
+        }
+
+        guard argument.count == 1 else {
+            throw ParseError.invalidFormat(argument)
+        }
+
+        self = argument[argument.startIndex]
+        arguments.removeFirst()
+    }
+}
+
 extension Bool: ArgumentType {}
 extension Int: ArgumentType {}
 extension Int8: ArgumentType {}

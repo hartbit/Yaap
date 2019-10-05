@@ -10,9 +10,6 @@ Yaap is Yet Another (Swift) Argument Parser that represents executable commands 
 Here's a self-contained example of a `rand` executable that generates random numbers in a configurable interval to standard output, with everything from `--help` documentation, usage generation, and `--version` printing.
 
 ```swift
-import Yaap
-import Foundation
-
 class RandomCommand: Command {
     let name = "rand"
     let documentation = "Generates a random number that lies in an interval."
@@ -21,17 +18,18 @@ class RandomCommand: Command {
     var maximum: Int
 
     @Option(shorthand: "m", documentation: "Inclusive minimum value")
-    var minimum = 0
+    var minimum: Int = 0
 
     let help = Help()
     let version = Version("0.1.0")
 
     func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
-        guard maximum.value > minimum.value else {
-            throw InvalidIntervalError(minimum: minimum.value, maximum: maximum.value)
+        guard maximum > minimum else {
+            throw InvalidIntervalError(minimum: minimum, maximum: maximum)
         }
 
-        outputStream.write(Int.random(in: minimum.value..<maximum.value).description)
+        outputStream.write(Int.random(in: minimum..<maximum).description)
+        outputStream.write("\n")
     }
 }
 
@@ -97,10 +95,13 @@ class SplitCommand: Command {
 
     @Argument(documentation: "The string to split.")
     var string: String
-    let sep = Argument<String>(name: "separator", documentation: "The seperator to split the string with.")
+
+    @Argument(name: "separator", documentation: "The seperator to split the string with.")
+    var sep: Character
 
     func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
-        outputStream.write(string.value.split(separator: separator.value).joined("\n"))
+        outputStream.write(string.split(separator: sep).joined(separator: "\n"))
+        outputStream.write("\n")
     }
 }
 ```
@@ -120,15 +121,16 @@ Optional arguments are defined using the generic `Option` type and must provide 
 ```swift
 class SplitCommand: Command {
     let name = "split"
-    let string = Argument<String>()
-    let sep = Optional<String>(
-        name: "separator",
-        shorthand: "s",
-        defaultValue: " ",
-        documentation: "The seperator to split the string with.")
+
+    @Argument
+    var string: String
+
+    @Option(name: "separator", shorthand: "s", documentation: "The seperator to split the string with.")
+    var sep: Character = " "
 
     func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
-        outputStream.write(string.value.split(separator: sep.value).joined("\n"))
+        outputStream.write(string.split(separator: sep).joined(separator: "\n"))
+        outputStream.write("\n")
     }
 }
 ```
@@ -151,16 +153,18 @@ Yaap comes with a built-in `Help` property that parses `--help/-h` arguments and
 class RandomCommand: Command {
     let name = "rand"
     let documentation = "Generates a random number that lies in an interval."
-    let maximum = Argument<Int>(documentation: "Exclusive maximum value")
-    let minimum = Option<Int>(shorthand: "m", defaultValue: 0, documentation: "Inclusive minimum value")
     let help = Help()
+
+    @Argument(documentation: "Exclusive maximum value")
+    var maximum: Int
+
+    @Option(shorthand: "m", documentation: "Inclusive minimum value")
+    var minimum: Int = 0
 
     func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
         // ...
     }
 }
-
-MyCommand().parseAndRun()
 ```
 
 ```
@@ -183,10 +187,13 @@ Yaap also comes with a built-in `Version` property that allows commands to respo
 
 ```swift
 class MyCommand: Command {
+    let name = "program"
     let version = Version("4.2", name: "ver", shorthand: nil)
-}
 
-MyCommand().parseAndRun()
+    func run(outputStream: inout TextOutputStream, errorStream: inout TextOutputStream) throws {
+        // ...
+    }
+}
 ```
 
 ```
