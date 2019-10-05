@@ -1,4 +1,4 @@
-# Yaap
+# Yaap [![version 1.0.0](https://img.shields.io/badge/version-1.0.0-brightgreen)](#installation) [![swift 5.1](https://img.shields.io/badge/swift-5.1-orange)](https://developer.apple.com/swift/) [![license MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 Yaap is Yet Another (Swift) Argument Parser that represents executable commands as types and argument and options as properties of those types. It supports:
 
