@@ -18,5 +18,5 @@ jobs:
     - uses: actions/checkout@v1
     - uses: YOCKOW/Action-setup-swift@master
       with:
-        swift-version: '5.0.3' # This value is passed to swiftenv without modification. 
+        swift-version: ${{ matrix.swift_version }}
     - run: swift test --verbose
