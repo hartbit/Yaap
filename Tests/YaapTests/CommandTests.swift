@@ -87,10 +87,10 @@ class CommandTests: XCTestCase {
         XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
 
         XCTAssertEqual(outputStream as? String, "")
-        XCTAssertEqual(errorStream as? String, """
-            \u{001B}[31merror:\u{001B}[0m The operation couldn’t be completed. (YaapTests.DummyError error 1.)
-
-            """)
+        var errorString = errorStream as! String
+        // Can't be more precise because Darwin and Linux don't print errors the same way.
+        XCTAssert(errorString.starts(with: "\u{001B}[31merror:\u{001B}[0m The operation could"))
+        XCTAssertEqual(errorString.last, "\n")
 
         command = ErrorCommand(parseError: DummyLocalizedError())
         outputStream = ""
@@ -98,10 +98,7 @@ class CommandTests: XCTestCase {
         XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
 
         XCTAssertEqual(outputStream as? String, "")
-        XCTAssertEqual(errorStream as? String, """
-            \u{001B}[31merror:\u{001B}[0m dummy-localized-error
-
-            """)
+        XCTAssertEqual(errorStream as? String, "\u{001B}[31merror:\u{001B}[0m dummy-localized-error\n")
 
         command = ErrorCommand(runError: DummyError())
         outputStream = ""
@@ -109,10 +106,10 @@ class CommandTests: XCTestCase {
         XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
 
         XCTAssertEqual(outputStream as? String, "")
-        XCTAssertEqual(errorStream as? String, """
-            \u{001B}[31merror:\u{001B}[0m The operation couldn’t be completed. (YaapTests.DummyError error 1.)
-
-            """)
+        errorString = errorStream as! String
+        // Can't be more precise because Darwin and Linux don't print errors the same way.
+        XCTAssert(errorString.starts(with: "\u{001B}[31merror:\u{001B}[0m The operation could"))
+        XCTAssertEqual(errorString.last, "\n")
 
         command = ErrorCommand(runError: DummyLocalizedError())
         outputStream = ""
@@ -120,9 +117,6 @@ class CommandTests: XCTestCase {
         XCTAssertExit(128, command.parseAndRun(arguments: [], outputStream: &outputStream, errorStream: &errorStream))
 
         XCTAssertEqual(outputStream as? String, "")
-        XCTAssertEqual(errorStream as? String, """
-            \u{001B}[31merror:\u{001B}[0m dummy-localized-error
-
-            """)
+        XCTAssertEqual(errorStream as? String, "\u{001B}[31merror:\u{001B}[0m dummy-localized-error\n")
     }
 }
